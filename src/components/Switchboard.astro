@@ -177,6 +177,7 @@ const bridge = { x: 350, y: 270 };
     }, 1000);
 
     let counter = 0;
+    let nextTimer: ReturnType<typeof setTimeout> | null = null;
 
     function flashNode(side: 'consumer' | 'enterprise', id: string, delay = 0) {
       const node = root.querySelector<SVGGElement>(
@@ -273,16 +274,31 @@ const bridge = { x: 350, y: 270 };
       li.append(tsEl, routeEl, scopeEl, latEl);
 
       feedRows.prepend(li);
-      while (feedRows.children.length > 6) {
-        const last = feedRows.lastElementChild;
-        if (!last) break;
-        last.classList.add('sb-row-out');
-        setTimeout(() => last.remove(), 400);
+
+      // Trim overflow. CRITICAL: removal is async (400ms for fade), so
+      // children.length doesn't drop inside this scope — use a single
+      // overflow snapshot + skip already-marked rows to avoid an infinite
+      // loop or duplicate-scheduling memory leak.
+      const overflow = Array.from(feedRows.children).slice(6);
+      for (const el of overflow) {
+        if (el.classList.contains('sb-row-out')) continue;
+        el.classList.add('sb-row-out');
+        setTimeout(() => el.remove(), 400);
       }
+
       requestAnimationFrame(() => li.classList.add('sb-row-in'));
     }
 
+    function scheduleNext(delay: number) {
+      if (document.hidden) return;
+      nextTimer = setTimeout(() => {
+        nextTimer = null;
+        fireHandshake();
+      }, delay);
+    }
+
     function fireHandshake() {
+      if (document.hidden) return;
       const isBridge = counter > 0 && counter % 5 === 0;
       const consumer = rand(consumers);
       const enterprise = rand(enterprises);
@@ -339,11 +355,24 @@ const bridge = { x: 350, y: 270 };
       counter++;
 
       const nextDelay = isBridge ? jitter(2600, 600) : jitter(1700, 700);
-      setTimeout(fireHandshake, nextDelay);
+      scheduleNext(nextDelay);
     }
 
+    // pause animation when tab is hidden — prevents background-tab
+    // setTimeout buildup and CPU spend while the user isn't looking
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (nextTimer != null) {
+          clearTimeout(nextTimer);
+          nextTimer = null;
+        }
+      } else if (nextTimer == null) {
+        scheduleNext(500);
+      }
+    });
+
     // start
-    setTimeout(fireHandshake, 700);
+    scheduleNext(700);
   }
 
   function boot() {
