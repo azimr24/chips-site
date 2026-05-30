@@ -1,0 +1,138 @@
+---
+import Doc from '../layouts/Doc.astro';
+import FeatureRow from '../components/FeatureRow.astro';
+import Callout from '../components/Callout.astro';
+import Button from '../components/Button.astro';
+import MonoLabel from '../components/MonoLabel.astro';
+import StatusPill from '../components/StatusPill.astro';
+---
+
+<Doc
+  title="Chips for platforms — BYO runtime, plug into bridge + network intelligence"
+  description="For enterprises with internal agent capability already running on Bedrock, Azure Foundry, or in-house — plug into the bridge and Level B priors via packages/sdk-a2a-server."
+  pageLabel="FOR PLATFORMS"
+  eyebrow="CATEGORY B · ENTERPRISES WITH INTERNAL AGENT CAPABILITY"
+  heading={`<em>Don't</em> rebuild your runtime.<br/>Plug into the <em>network<span class="dot">.</span></em>`}
+  lede="You have an agent on Bedrock, Foundry, or in-house. You don't need a new runtime — you need the consumer-consented context network and the cross-enterprise behavior priors that no single cloud can give you."
+>
+  <FeatureRow number="01" label="THE PROBLEM" heading="Hyperscalers cannot give you Level B.">
+    <p>
+      Bedrock and Foundry could in principle aggregate cross-enterprise signal — they host enterprise agents.
+      <em>They can't credibly do it</em> because their commercial relationships compete with the enterprises
+      they'd aggregate from. You won't trust AWS with your conversion patterns when AWS is simultaneously
+      selling cloud services to the rest of your market and operating Amazon's own retail business.
+    </p>
+    <p>
+      Solo agents — even excellent ones — are <em>structurally cold</em>. Every consumer interaction starts
+      from your data alone. Every objection pattern, every conversion-by-context insight, every clarifying
+      question that works in your category has to be discovered by you.
+    </p>
+  </FeatureRow>
+
+  <FeatureRow number="02" label="THE INTEGRATION" heading="One SDK. Bridge + Network Intelligence.">
+    <p>
+      Install <code>@chips/sdk-a2a-server</code> in your existing A2A runtime — Bedrock AgentCore, Azure AI
+      Foundry, Salesforce, or in-house. The SDK wires:
+    </p>
+    <ul>
+      <li><em>Bridge response handlers</em> — your agent can call <code>bridge.query</code> against the Chips network with consumer-consented scopes.</li>
+      <li><em>Outcome event emitters</em> — Level A flows to your CDP, Level B flows to the Chips aggregation pipeline.</li>
+      <li><em>Level B prior consumption</em> — system-prompt augmentation, reranking signal, conversation-state heuristics.</li>
+      <li><em>Policy hooks</em> — the bridge utility model (Loop 5) suggests queries your agent might not have considered.</li>
+    </ul>
+    <p>
+      <em>You keep your runtime. You keep your LLM choice. You keep your operational footprint.</em> You add
+      the network as a thin API layer that compounds.
+    </p>
+  </FeatureRow>
+
+  <FeatureRow number="03" label="THE PRICING" heading="Unbundled Network Intelligence. Pay for the layer that compounds.">
+    <p>
+      For Category B enterprises who don't take the Chips runtime, <em>Network Intelligence is sold
+      unbundled</em>: <strong>$499/mo</strong> for category-refined priors, <strong>$2,499/mo</strong> for
+      bespoke. Plus standard handshake + bridge call meters.
+    </p>
+    <p>
+      Worked example for a Category B enterprise on Bedrock who only buys NI + Bridge: bridge ~$7,500/mo +
+      NI subscription $499/mo = <em>~$8,000/mo</em>. See <a href="/pricing">/pricing</a> for the full table.
+    </p>
+  </FeatureRow>
+
+  <Callout variant="quote">
+    <p>
+      <strong>The unbundled NI subscription is the meter hyperscalers structurally cannot replicate.</strong>
+      As Chips's network grows, Meter 5 value grows. As Bedrock and Foundry scale, their per-API price drops —
+      but their Network Intelligence stays at zero.
+    </p>
+  </Callout>
+
+  <FeatureRow number="04" label="WHO THIS IS FOR" heading="Enterprises shipping agents that recognize the structural gap.">
+    <p>
+      You're a good fit if you've already shipped an A2A agent on Bedrock / Azure / in-house, you know what
+      your agent doesn't know, and you can name the conversion patterns you'd love to inherit from the rest of
+      your category. <em>~200–500 mid-market enterprises globally fit this profile.</em>
+    </p>
+    <p>
+      Common entry points: <StatusPill kind="emerald">AWS Bedrock AgentCore</StatusPill>
+      <StatusPill kind="emerald">Azure AI Foundry</StatusPill>
+      <StatusPill kind="emerald">Salesforce Agentforce</StatusPill>
+      <StatusPill kind="emerald">In-house LangGraph / LlamaIndex</StatusPill>
+    </p>
+  </FeatureRow>
+
+  <section class="cta-row">
+    <div class="cta-row-inner">
+      <div>
+        <MonoLabel tone="emerald">PARTNERSHIPS · CATEGORY B</MonoLabel>
+        <h3 class="cta-h">
+          Plug in the network.<br />
+          <em>Keep</em> the runtime.
+        </h3>
+      </div>
+      <div class="cta-buttons">
+        <Button href="mailto:hello@chips.dev?subject=Chips%20-%20platforms%20partnership" variant="primary">
+          Talk to us
+        </Button>
+        <Button href="/how-it-works" variant="outline">How it works</Button>
+      </div>
+    </div>
+  </section>
+</Doc>
+
+<style>
+  .cta-row {
+    margin-top: 72px;
+    padding: 48px 0 0;
+    border-top: 1px solid var(--hair);
+  }
+  .cta-row-inner {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+  .cta-h {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 2vw + 0.5rem, 2.1rem);
+    line-height: 1.15;
+    letter-spacing: -0.018em;
+    font-weight: 400;
+    color: var(--ink);
+    margin: 12px 0 0;
+    max-width: 24ch;
+  }
+  .cta-h em {
+    font-style: italic;
+    color: var(--emerald);
+  }
+  .cta-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  @media (max-width: 900px) {
+    .cta-row-inner { grid-template-columns: 1fr; }
+    .cta-buttons { justify-content: flex-start; }
+  }
+</style>

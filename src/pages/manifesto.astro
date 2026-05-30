@@ -1,0 +1,153 @@
+---
+import Doc from '../layouts/Doc.astro';
+import Callout from '../components/Callout.astro';
+import Button from '../components/Button.astro';
+---
+
+<Doc
+  title="Manifesto — Chips and the agentic web"
+  description="The right unit of identity for AI commerce is not the session, the device, or the IP. It's the durable link between a person, their agent, and the brands they've already said yes to."
+  pageLabel="MANIFESTO"
+  eyebrow="THE THESIS · UNABRIDGED"
+  heading={`The right unit of <em>identity</em><br/>for AI commerce<span class="dot">.</span>`}
+  lede="The agentic web is not the next layer of the page web. It's a different artifact — a network of conversations between agents about people. The protocol it needs is not a cookie or an OAuth scope. It's a durable, consented, cross-enterprise context bridge with a learning layer beneath."
+>
+  <div class="prose">
+    <p class="big-quote">
+      <em>"The right unit of identity for AI commerce is not the session, the device, or the IP. It's the
+      durable link between a person, their agent, and the brands they've already said yes to."</em>
+    </p>
+
+    <h2>The page web was wired for surveillance.</h2>
+    <p>
+      Browser cookies are used against you. Every site you visit drops a beacon, every ad network triangulates
+      across them, and the consumer pays in attention and privacy for a system that pretends to serve them.
+      The page web's identity layer is adversarial by construction — the consumer is the product, the
+      advertiser is the customer, the publisher is the conduit.
+    </p>
+
+    <h2>The agentic web is a different artifact.</h2>
+    <p>
+      A consumer agent talks to an enterprise agent on the consumer's behalf. The enterprise agent runs the
+      enterprise's policy and observes the conversation. The consumer never visits a page; the page is dead.
+      The session is dead. The cookie is dead. <em>What's alive is the conversation, and the question is who
+      owns the context that flows between those conversations.</em>
+    </p>
+
+    <Callout variant="quote">
+      <p>
+        Browser cookies are used <strong>against</strong> you.<br/>
+        Chips cookies are used <strong>for</strong> you.
+      </p>
+    </Callout>
+
+    <h2>Chips closes the loop.</h2>
+    <p>
+      <em>Enterprises</em> get attribution and personalization for agent traffic — richer than any cookie,
+      durable across devices. <em>Consumers</em> get a context layer that travels with their agent rather
+      than locking them to one storefront. <em>Both parties opt in transparently, and the policy on what
+      enterprises can do with that data is enforced in the protocol, not in a privacy statement.</em>
+    </p>
+
+    <h2>The standard already exists.</h2>
+    <p>
+      A2A — Agent-to-Agent protocol, governed by the Linux Foundation, with 150+ enterprise deployments in
+      its first year — already prescribes how a consumer agent authenticates to an enterprise agent. It uses
+      OIDC delegated user auth. It carries email and sub claims. <em>Chips is built directly on this
+      standard.</em> The consumer agent doesn't need a Chips integration. The consumer doesn't need a
+      Chips account.
+    </p>
+    <p>
+      What Chips adds is the <em>cross-enterprise context bridge</em> — the consent-mediated mechanism that
+      lets one enterprise's agent ask another enterprise's agent for context the consumer has authorized to
+      share — and the <em>privacy-preserving network learning layer</em> beneath, where every conversation
+      structures into events that compound into priors no single enterprise or hyperscaler can credibly
+      replicate.
+    </p>
+
+    <h2>The moat is twofold.</h2>
+    <p>
+      <em>The bridge is the moat people see.</em> Legible to enterprises within minutes: <em>"we can answer
+      questions across the network for your customer with their permission."</em>
+    </p>
+    <p>
+      <em>Network learning is the moat that compounds.</em> Five loops at two levels — Level A locally at the
+      enterprise, Level B aggregated across the network under differential privacy. The pattern is closer to
+      a Bloomberg Terminal than to a feature: it takes six months to communicate the value, and it locks in
+      once it's understood.
+    </p>
+
+    <h2>Hyperscalers cannot follow.</h2>
+    <p>
+      Bedrock and Foundry can host enterprise agents. They cannot credibly aggregate cross-enterprise signal,
+      because their commercial relationships compete with the enterprises they'd aggregate from. Consumer
+      agents can route consumers, but they cannot run the enterprise side. <em>Chips is the neutral
+      cross-enterprise broker whose commercial relationship is with enterprises, optionally with consumer
+      agents as a partnership layer, and never with the consumer directly.</em>
+    </p>
+
+    <h2>And the first cohort is closing.</h2>
+    <p>
+      Phase 1 is white-glove onboarding for ten outdoor &amp; athletic apparel enterprises. Phase 2 is
+      self-serve Studio + the first Level B prior release for the category. <em>Phase 3 is network density
+      compounding across categories.</em>
+    </p>
+    <p>
+      Apply early. The launch cohort shapes the scope vocabulary, the event taxonomy, and the priors every
+      subsequent enterprise inherits.
+    </p>
+
+    <div class="end-ctas">
+      <Button href="mailto:hello@chips.dev?subject=Manifesto%20%E2%80%94%20interest" variant="primary">
+        hello@chips.dev
+      </Button>
+      <Button href="/how-it-works" variant="outline">Read the mechanics</Button>
+    </div>
+  </div>
+</Doc>
+
+<style>
+  .prose {
+    max-width: 72ch;
+    margin: 0 auto;
+  }
+  .prose h2 {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 1.5vw + 0.8rem, 1.85rem);
+    line-height: 1.15;
+    letter-spacing: -0.014em;
+    font-weight: 400;
+    color: var(--ink);
+    margin: 56px 0 18px;
+  }
+  .prose p {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ink);
+    margin: 0 0 22px;
+  }
+  .prose p em {
+    font-style: italic;
+    color: var(--emerald);
+  }
+  .big-quote {
+    font-size: 26px !important;
+    line-height: 1.3 !important;
+    color: var(--ink) !important;
+    border-left: 3px solid var(--emerald);
+    padding-left: 28px !important;
+    margin: 8px 0 56px !important;
+  }
+  .big-quote em {
+    color: var(--ink) !important;
+  }
+  .end-ctas {
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid var(--hair);
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+</style>

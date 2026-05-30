@@ -1,0 +1,155 @@
+---
+import Doc from '../layouts/Doc.astro';
+import FeatureRow from '../components/FeatureRow.astro';
+import KPICard from '../components/KPICard.astro';
+import Callout from '../components/Callout.astro';
+import Button from '../components/Button.astro';
+import MonoLabel from '../components/MonoLabel.astro';
+---
+
+<Doc
+  title="Chips for enterprises — ship your A2A agent in 4–8 hours"
+  description="Mid-market DTC and retail enterprises with no internal agent capability. Self-serve via the Chips Studio. Agent ships in 4–8 hours, sharp from day 1 on Level B priors."
+  pageLabel="FOR ENTERPRISES"
+  eyebrow="CATEGORY A · MID-MARKET DTC + RETAIL"
+  heading={`<em>Ship</em> your agent<br/>in <em>4–8 hours<span class="dot">.</span></em>`}
+  lede="If you sell things online and you haven't shipped an agent yet, the gap between you and your better-funded competitors widens every week. Chips is to A2A agents what Shopify is to e-commerce sites."
+>
+  <section class="kpis">
+    <div class="kpi-grid">
+      <KPICard label="TIME TO LIVE AGENT" value="4–8" suffix="HOURS" detail="From signed contract to Agent Card published" />
+      <KPICard label="BLENDED HANDSHAKE" value="$0.012" suffix="PER" detail="100K monthly handshakes · basic + standard tiers" />
+      <KPICard label="CONVERSION LIFT" value="+16" suffix="PP" detail="Phase 1 cohort · outdoor &amp; athletic · vs. pre-network baseline" />
+      <KPICard label="DAY-1 SHARPNESS" value="MONTH 6" suffix="EQUIVALENT" detail="Level B priors baked into your agent's system prompt from the first turn" />
+    </div>
+  </section>
+
+  <FeatureRow number="01" label="THE PITCH" heading="Chips is to A2A agents what Shopify is to e-commerce sites.">
+    <p>
+      <em>Your agent ships in 4–8 hours</em>, recognizes every A2A-compliant consumer agent's user, bridges
+      context across the network, and inherits behavior priors from the network so your agent is sharp on day 1.
+    </p>
+    <p>
+      No infrastructure to build. No identity layer to design. No data warehouse to wire up. You bring your
+      catalog and your policy; Chips brings the runtime, the bridge, the priors, and the rebate flow.
+    </p>
+  </FeatureRow>
+
+  <FeatureRow number="02" label="THE STUDIO" heading="Catalog ingest. Policy YAML. Live A2A test harness. Learning tab.">
+    <p>
+      The Chips Studio is the enterprise console. <em>Catalog ingest</em> from OpenAPI, Shopify Storefront,
+      NLWeb endpoint, or CSV. <em>Policy YAML editor</em> with live A2A test harness against your draft agent.
+      <em>Bridge participation</em> toggles. <em>Operator dashboard.</em>
+    </p>
+    <p>
+      The Learning tab is the differentiator. Level A view: your own Loop 1–3 state — consumer behavior
+      summaries, SKU-level enrichment, policy refinements observed against your data. Level B view: the network
+      priors your agent is currently consuming, with per-prior provenance (which aggregate distribution,
+      N=, epsilon spent, version). Policy tuner: opt out of specific priors, weight your own Level A signal more
+      heavily, or contribute additional signal categories.
+    </p>
+  </FeatureRow>
+
+  <FeatureRow number="03" label="THE NETWORK" heading="Bridge in, priors out. Cold start solved.">
+    <p>
+      The consumer's relationship is with their consumer agent — ChatGPT, Claude, Apple Intelligence,
+      Perplexity. Your agent never has to acquire them. <em>Standard A2A handshake delivers identity. Bridge
+      delivers cross-enterprise context with consent. Network learning delivers behavior priors.</em>
+    </p>
+    <p>
+      You arrive on the network and immediately benefit from every conversation that happened before yours.
+      Late joiners benefit more, not less, from Level B priors — the priors are richer by then.
+    </p>
+  </FeatureRow>
+
+  <FeatureRow number="04" label="THE PRICING" heading="Five meters. One bill. Bridge target side flips to revenue.">
+    <p>
+      <em>Handshake</em> per consumer ($0.001–$0.050 stratified by tier). <em>Bridge call</em> per query
+      ($0.05–$1.00 stratified by scope). <em>Runtime subscription</em> per tenant ($99 / $999 / $5K+).
+      <em>Network Intelligence</em> bundled into the runtime tier. Bridge target-side revenue share when other
+      enterprises query your data: <strong>30% to you</strong>, 50% to the caller, 20% to Chips.
+    </p>
+    <p>
+      Worked example, mid-market outdoor retailer: 100K monthly handshakes + 30K bridge calls + Growth runtime
+      tier = <em>~$9,700/mo</em>. See <a href="/pricing">/pricing</a> for the full table.
+    </p>
+  </FeatureRow>
+
+  <Callout variant="quote">
+    <p>
+      <strong>First cohort is outdoor &amp; athletic apparel.</strong> Bridge + Network Intelligence value
+      compounds within each category, and we're picking verticals where the cross-enterprise read is
+      structurally most valuable.
+    </p>
+    <p>
+      Second cohort: beauty + skincare. Third: home goods. <em>Apply early for bootstrap pricing on bridge fees
+      + introductory Network Intelligence</em> in exchange for being a launch reference.
+    </p>
+  </Callout>
+
+  <section class="cta-row">
+    <div class="cta-row-inner">
+      <div>
+        <MonoLabel tone="emerald">APPLY · COHORT IS CLOSING</MonoLabel>
+        <h3 class="cta-h">
+          Ten enterprises in the launch cohort.<br />
+          <em>Six seats remain.</em>
+        </h3>
+      </div>
+      <div class="cta-buttons">
+        <Button href="mailto:hello@chips.dev?subject=Chips%20cohort%20-%20enterprise" variant="primary">
+          Apply to the cohort
+        </Button>
+        <Button href="/pricing" variant="outline">See pricing</Button>
+      </div>
+    </div>
+  </section>
+</Doc>
+
+<style>
+  .kpis { margin-bottom: 64px; }
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--hair);
+  }
+  .cta-row {
+    margin-top: 72px;
+    padding: 48px 0 0;
+    border-top: 1px solid var(--hair);
+  }
+  .cta-row-inner {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+  .cta-h {
+    font-family: var(--serif);
+    font-size: clamp(1.6rem, 2vw + 0.5rem, 2.1rem);
+    line-height: 1.15;
+    letter-spacing: -0.018em;
+    font-weight: 400;
+    color: var(--ink);
+    margin: 12px 0 0;
+    max-width: 24ch;
+  }
+  .cta-h em {
+    font-style: italic;
+    color: var(--emerald);
+  }
+  .cta-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  @media (max-width: 900px) {
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .cta-row-inner { grid-template-columns: 1fr; }
+    .cta-buttons { justify-content: flex-start; }
+  }
+  @media (max-width: 500px) {
+    .kpi-grid { grid-template-columns: 1fr; }
+  }
+</style>

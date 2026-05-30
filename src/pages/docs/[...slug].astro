@@ -1,0 +1,82 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Doc from '../../layouts/Doc.astro';
+
+export async function getStaticPaths() {
+  const docs = await getCollection('docs');
+  return docs.map((doc) => ({
+    params: { slug: doc.id },
+    props: { doc },
+  }));
+}
+
+interface Props {
+  doc: CollectionEntry<'docs'>;
+}
+
+const { doc } = Astro.props;
+const { Content } = await render(doc);
+---
+
+<Doc
+  title={`${doc.data.title} — Chips Docs`}
+  description={doc.data.description}
+  pageLabel="DOCS"
+  eyebrow={doc.data.eyebrow}
+  heading={doc.data.title}
+  lede={doc.data.description}
+>
+  <div class="mdx">
+    <Content />
+  </div>
+</Doc>
+
+<style>
+  .mdx {
+    max-width: 72ch;
+  }
+  .mdx :global(h1) {
+    display: none;
+  }
+  .mdx :global(h2) {
+    font-family: var(--serif);
+    font-size: 1.75rem;
+    margin: 48px 0 16px;
+    font-weight: 400;
+    letter-spacing: -0.014em;
+  }
+  .mdx :global(h3) {
+    font-family: var(--serif);
+    font-size: 1.35rem;
+    margin: 32px 0 12px;
+    font-weight: 400;
+  }
+  .mdx :global(p) {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.6;
+    margin: 0 0 1.2em;
+    color: var(--ink);
+  }
+  .mdx :global(strong) {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .mdx :global(ol),
+  .mdx :global(ul) {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .mdx :global(li) {
+    margin: 0 0 0.5em;
+  }
+  .mdx :global(a) {
+    color: var(--ink);
+    border-bottom: 1px solid var(--emerald);
+  }
+  .mdx :global(a:hover) {
+    color: var(--emerald);
+  }
+</style>

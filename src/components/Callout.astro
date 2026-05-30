@@ -1,0 +1,40 @@
+---
+interface Props {
+  variant?: 'quote' | 'note';
+}
+
+const { variant = 'quote' } = Astro.props;
+---
+
+<aside class:list={['callout', `callout-${variant}`]}>
+  <slot />
+</aside>
+
+<style>
+  .callout {
+    margin: 32px 0;
+    padding: 26px 30px;
+    border-radius: var(--radius-md);
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  .callout-quote {
+    font-style: italic;
+    background: var(--emerald-soft);
+    border-left: 3px solid var(--emerald);
+    color: var(--ink-deep);
+  }
+  .callout-quote :global(strong) {
+    font-style: normal;
+    color: var(--emerald);
+    font-weight: 500;
+  }
+  .callout-note {
+    background: var(--bg-soft);
+    border: 1px solid var(--hair);
+    font-size: 16px;
+    color: var(--slate);
+  }
+</style>

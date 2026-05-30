@@ -1,0 +1,269 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Button from '../components/Button.astro';
+import LogoStrip from '../components/LogoStrip.astro';
+import PillarCard from '../components/PillarCard.astro';
+import KPICard from '../components/KPICard.astro';
+import Callout from '../components/Callout.astro';
+import MonoLabel from '../components/MonoLabel.astro';
+---
+
+<Base
+  title="Chips — Invisible commerce infrastructure for the agentic web"
+  description="A2A-native enterprise agents, a consent-mediated cross-enterprise context bridge, and privacy-preserving network learning. The consumer never signs up. The agent ships in 4–8 hours."
+>
+  <Hero eyebrow="THE BRIDGE IS THE MOAT PEOPLE SEE · NETWORK LEARNING IS THE MOAT THAT COMPOUNDS">
+    <Fragment slot="headline">
+      <em>Invisible</em> commerce<br />
+      infrastructure for<br />
+      the <em>agentic web<span class="dot">.</span></em>
+    </Fragment>
+    <Fragment slot="sub">
+      <p>
+        The consumer opens her agent of choice — ChatGPT, Claude, Apple Intelligence, Perplexity — asks to buy
+        something, and through standard A2A conversation talks to <em>Chips-hosted enterprise agents</em> that
+        recognize her, personalize for her, and bridge context across the network.
+      </p>
+      <p>She never signs up for Chips. She never sees a Chips screen.</p>
+    </Fragment>
+    <Fragment slot="ctas">
+      <Button href="/how-it-works" variant="primary">How it works</Button>
+      <Button href="/pricing" variant="outline">See pricing</Button>
+      <Button href="mailto:hello@chips.dev" variant="ghost">hello@chips.dev</Button>
+    </Fragment>
+    <Fragment slot="strip">
+      <LogoStrip />
+    </Fragment>
+  </Hero>
+
+  <section class="pillars">
+    <div class="shell">
+      <div class="section-head">
+        <MonoLabel tone="emerald">01 · THE PRODUCT SURFACE</MonoLabel>
+        <span class="section-rule"></span>
+        <MonoLabel tone="slate">THREE LAYERS · ONE NETWORK</MonoLabel>
+      </div>
+
+      <h2 class="section-title">
+        A hosted A2A runtime, a consent-mediated <em>bridge</em>,
+        and a privacy-preserving learning layer that compounds.
+      </h2>
+
+      <div class="pillar-grid">
+        <PillarCard index="I" label="RUNTIME" heading="Hosted A2A enterprise agent runtime">
+          Multi-tenant. Eleven JSON-RPC methods over HTTP + SSE. Full task lifecycle. <em>BYO LLM</em> or
+          Chips Commerce Agent baseline. Your agent ships in <em>4–8 hours</em>.
+        </PillarCard>
+
+        <PillarCard index="II" label="BRIDGE" heading="Cross-enterprise context bridge">
+          Consent-mediated context queries across the network. Conversational by default, structured for
+          partners. Scope vocabulary governed by the <em>Linux Foundation A2A WG</em>. Every grant audit-logged.
+        </PillarCard>
+
+        <PillarCard index="III" label="NETWORK INTELLIGENCE" heading="Level B priors, under differential privacy">
+          Five learning loops at distinct timescales. <em>Level A</em> stays at your CDP. <em>Level B</em>
+          aggregates across the network with calibrated DP noise. Day-1 cold-start operates above what a solo
+          agent achieves at month 6.
+        </PillarCard>
+      </div>
+    </div>
+  </section>
+
+  <section class="metrics">
+    <div class="shell">
+      <div class="section-head">
+        <MonoLabel tone="emerald">02 · WHAT YOU MEASURE</MonoLabel>
+        <span class="section-rule"></span>
+        <MonoLabel tone="slate">EARLY-COHORT TYPICALS</MonoLabel>
+      </div>
+
+      <h2 class="section-title">
+        Sharper agents. <em>Higher conversion.</em> Lower returns.
+      </h2>
+
+      <div class="kpi-grid">
+        <KPICard label="AGENT SHIPS IN" value="4–8" suffix="HOURS" detail="From signed contract to Agent Card published at agents.chips.dev/<you>" />
+        <KPICard label="CONVERSION LIFT" value="+16" suffix="PP" detail="38% vs 22% baseline · Phase 1 cohort · outdoor &amp; athletic" />
+        <KPICard label="BRIDGE CALLS" value="30" suffix="% OF HANDSHAKES" detail="Typical mid-market retailer · scope-stratified by category" />
+        <KPICard label="LEVEL B PRIORS" value="N=42k" suffix="ε=0.5" detail="Population-level patterns · DP-aggregated · audit pipeline external-review-ready" />
+      </div>
+    </div>
+  </section>
+
+  <section class="thesis">
+    <div class="shell">
+      <div class="section-head">
+        <MonoLabel tone="emerald">03 · THE THESIS</MonoLabel>
+        <span class="section-rule"></span>
+      </div>
+
+      <div class="thesis-grid">
+        <div class="thesis-text">
+          <h2 class="section-title">
+            The right unit of identity for AI commerce<br />
+            is not the <em>session</em>, the <em>device</em>, or the <em>IP</em>.
+          </h2>
+          <p class="thesis-body">
+            It's the durable link between a person, their agent, and the brands they've already said yes to.
+          </p>
+          <p class="thesis-body">
+            Browser cookies were built for a web of pages. The agentic web is a network of conversations.
+            <em>Chips is the protocol that lets those conversations carry context — with consent — across
+            every brand the consumer has touched.</em>
+          </p>
+        </div>
+
+        <Callout variant="quote">
+          <p>
+            Build the network we're all going to compete inside, and get the
+            <strong>first-mover advantage</strong> on shaping the conversation patterns
+            that become industry baselines.
+          </p>
+          <p class="attr"><span class="mono">— FIRST-COHORT PITCH · 06.1 §10</span></p>
+        </Callout>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="shell cta-inner">
+      <h2 class="cta-headline">
+        <em>Ship</em> your agent. Join the network. Inherit the priors.
+      </h2>
+      <p class="cta-sub">
+        First cohort is closing. <em>Outdoor &amp; athletic apparel · beauty · home goods.</em>
+      </p>
+      <div class="cta-ctas">
+        <Button href="mailto:hello@chips.dev?subject=Chips%20cohort%20interest" variant="primary">
+          Apply to the cohort
+        </Button>
+        <Button href="/pricing" variant="outline">See pricing</Button>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(1.9rem, 2.8vw + 0.5rem, 2.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    color: var(--ink);
+    margin: 0 0 56px;
+    max-width: 24ch;
+  }
+  .section-title :global(em) {
+    font-style: italic;
+    color: var(--emerald);
+  }
+
+  .pillars {
+    background: color-mix(in oklab, var(--bg-soft) 70%, transparent);
+  }
+  .pillar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--hair);
+    background: var(--bg);
+  }
+
+  .metrics .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--hair);
+  }
+
+  .thesis-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  .thesis-body {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--slate);
+    max-width: 56ch;
+  }
+  .thesis-body :global(em) {
+    font-style: italic;
+    color: var(--emerald);
+  }
+  .attr {
+    font-size: 12px !important;
+    color: var(--slate);
+    margin-top: 14px !important;
+    font-style: normal !important;
+  }
+
+  .cta {
+    background: var(--ink-deep);
+    color: var(--bg);
+    border-top: 1px solid var(--ink-deep);
+  }
+  .cta-inner {
+    padding: 96px 0;
+    text-align: center;
+  }
+  .cta-headline {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw + 0.5rem, 3.25rem);
+    line-height: 1.05;
+    letter-spacing: -0.022em;
+    font-weight: 400;
+    color: var(--bg);
+    margin: 0 auto 24px;
+    max-width: 22ch;
+  }
+  .cta-headline :global(em) {
+    font-style: italic;
+    color: var(--emerald);
+  }
+  .cta-sub {
+    font-family: var(--serif);
+    font-size: var(--fs-lede);
+    color: color-mix(in oklab, var(--bg) 85%, var(--ink));
+    margin: 0 auto 36px;
+    max-width: 48ch;
+  }
+  .cta-sub em {
+    font-style: italic;
+    color: var(--emerald-soft);
+  }
+  .cta-ctas {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .cta .btn-outline {
+    color: var(--bg);
+    border-color: color-mix(in oklab, var(--bg) 30%, transparent);
+  }
+  .cta .btn-outline:hover {
+    border-color: var(--emerald);
+    color: var(--emerald);
+  }
+
+  @media (max-width: 900px) {
+    .pillar-grid {
+      grid-template-columns: 1fr;
+    }
+    .metrics .kpi-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .thesis-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+  }
+  @media (max-width: 560px) {
+    .metrics .kpi-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

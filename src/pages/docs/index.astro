@@ -1,0 +1,109 @@
+---
+import { getCollection } from 'astro:content';
+import Doc from '../../layouts/Doc.astro';
+
+const docs = (await getCollection('docs')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Doc
+  title="Chips — Docs"
+  description="Technical documentation for the Chips protocol, runtime, bridge, and SDKs."
+  pageLabel="DOCS"
+  eyebrow="TECHNICAL DOCUMENTATION"
+  heading={`Docs<span class="dot">.</span>`}
+  lede="The technical surface — protocol mechanics, SDK guides, scope vocabulary, event taxonomy. Phase 0 placeholder; full docs land alongside the runtime."
+>
+  <div class="doc-index">
+    <ul>
+      {docs.map((doc) => (
+        <li>
+          <a href={`/docs/${doc.id}`} class="doc-link">
+            <span class="eyebrow mono">{doc.data.eyebrow}</span>
+            <span class="title">{doc.data.title}</span>
+            <span class="description">{doc.data.description}</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Doc>
+
+<style>
+  .doc-index ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid var(--hair);
+  }
+  .doc-index li {
+    border-bottom: 1px solid var(--hair);
+  }
+  .doc-link {
+    display: grid;
+    grid-template-columns: 130px 1fr auto;
+    gap: 24px;
+    padding: 28px 0;
+    text-decoration: none;
+    border-bottom: none;
+    align-items: baseline;
+    transition: color 150ms ease;
+  }
+  .doc-link:hover {
+    color: var(--emerald);
+  }
+  .doc-link .eyebrow {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--slate);
+  }
+  .doc-link .title {
+    font-family: var(--serif);
+    font-size: 21px;
+    color: var(--ink);
+    letter-spacing: -0.014em;
+  }
+  .doc-link:hover .title {
+    color: var(--emerald);
+  }
+  .doc-link .description {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--slate);
+    line-height: 1.4;
+  }
+  .doc-link .arrow {
+    font-family: var(--mono);
+    font-size: 18px;
+    color: var(--slate);
+    transition: transform 200ms ease, color 200ms ease;
+  }
+  .doc-link:hover .arrow {
+    color: var(--emerald);
+    transform: translateX(3px);
+  }
+  @media (max-width: 700px) {
+    .doc-link {
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+    }
+    .doc-link .eyebrow {
+      grid-column: 1 / 2;
+    }
+    .doc-link .title {
+      grid-column: 1 / 2;
+    }
+    .doc-link .description {
+      grid-column: 1 / 2;
+      grid-row: 3 / 4;
+    }
+    .doc-link .arrow {
+      grid-row: 1 / 2;
+      grid-column: 2 / 3;
+    }
+  }
+</style>

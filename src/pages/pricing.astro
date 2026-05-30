@@ -1,0 +1,162 @@
+---
+import Doc from '../layouts/Doc.astro';
+import PricingTable from '../components/PricingTable.astro';
+import Callout from '../components/Callout.astro';
+import MonoLabel from '../components/MonoLabel.astro';
+import KPICard from '../components/KPICard.astro';
+import Button from '../components/Button.astro';
+---
+
+<Doc
+  title="Pricing — five meters, one network"
+  description="Handshake fee. Bridge call fee. Runtime subscription. Optional partner settlement. Network Intelligence — bundled into runtime tiers, or unbundled for Category B enterprises on Bedrock / Foundry."
+  pageLabel="PRICING"
+  eyebrow="FIVE METERS · ONE NETWORK"
+  heading={`What you pay,<br/>and <em>what you earn back<span class="dot">.</span></em>`}
+  lede="Three core meters bill against value the enterprise receives. Two optional meters compose on top — partner settlement (opt-in) and Network Intelligence (bundled by default into runtime tiers, unbundled for BYO-runtime partners)."
+>
+  <section class="meters">
+    <div class="meters-grid">
+      <PricingTable
+        meter="METER 1 · IDENTITY HANDSHAKE"
+        caption="Per-handshake fee, billed to enterprise, stratified by consumer tier."
+        rows={[
+          { label: 'minimal', detail: 'Email-hash only', value: '$0.001', unit: '/HS' },
+          { label: 'basic', detail: 'Email + behavioral profile', value: '$0.005', unit: '/HS' },
+          { label: 'wallet', detail: 'Wallet attestation', value: '$0.010', unit: '/HS' },
+          { label: 'standard', detail: 'KYC + cross-network', value: '$0.020', unit: '/HS' },
+          { label: 'full', detail: 'Verified credential', value: '$0.050', unit: '/HS' },
+        ]}
+      />
+
+      <PricingTable
+        meter="METER 2 · BRIDGE CALL"
+        caption="Per-bridge-call fee, billed to calling enterprise, scope-stratified."
+        rows={[
+          { label: 'Loyalty / tier read', detail: 'loyalty-tier', value: '$0.05', unit: '/CALL' },
+          { label: 'Purchase-history read', detail: 'purchase-history', value: '$0.25', unit: '/CALL' },
+          { label: 'Behavioral profile read', detail: 'behavioral-profile', value: '$0.50', unit: '/CALL' },
+          { label: 'Multi-source aggregated', detail: 'multi-scope', value: '$1.00', unit: '/CALL' },
+        ]}
+      />
+
+      <PricingTable
+        meter="METER 3 · RUNTIME"
+        caption="Tenant-per-month subscription. Includes the Studio, the catalog ingest, the policy editor, and the Network Intelligence tier."
+        rows={[
+          { label: 'Starter', detail: 'Up to 20K handshakes/mo · baseline priors', value: '$99', unit: '/MO' },
+          { label: 'Growth', detail: 'Up to 200K handshakes/mo · category priors', value: '$999', unit: '/MO' },
+          { label: 'Enterprise', detail: 'Unlimited · bespoke priors · dedicated ε', value: '$5K+', unit: '/MO' },
+        ]}
+      />
+
+      <PricingTable
+        meter="METER 4 · PARTNER SETTLEMENT (OPT-IN)"
+        caption="Chips fee on rebate flow settled to integrated consumer-agent partners (Claude Code, Daydream, etc.). Not paid by non-integrated consumer agents."
+        rows={[
+          { label: 'Standard partner', detail: 'On settled rebate volume', value: '5%', unit: '· OPT-IN' },
+          { label: 'Volume partner', detail: 'Negotiated tier', value: '10%', unit: '· OPT-IN' },
+        ]}
+      />
+
+      <PricingTable
+        meter="METER 5 · NETWORK INTELLIGENCE"
+        caption="Level B priors. Bundled into runtime tiers by default. Unbundled for Category B partners on Bedrock / Foundry / in-house."
+        rows={[
+          { label: 'Bundled · Starter', detail: 'Baseline priors · weekly refresh', value: 'INCL.', unit: '· METER 3' },
+          { label: 'Bundled · Growth', detail: 'Category-refined · daily refresh', value: 'INCL.', unit: '· METER 3' },
+          { label: 'Bundled · Enterprise', detail: 'Bespoke · dedicated ε · real-time', value: 'INCL.', unit: '· METER 3' },
+          { label: 'Unbundled · Category priors', detail: 'BYO runtime · category-refined', value: '$499', unit: '/MO' },
+          { label: 'Unbundled · Bespoke priors', detail: 'BYO runtime · enterprise-class', value: '$2,499', unit: '/MO' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <section class="example">
+    <div class="section-head">
+      <MonoLabel tone="emerald">WORKED EXAMPLE</MonoLabel>
+      <span class="section-rule"></span>
+      <MonoLabel tone="slate">MID-MARKET OUTDOOR RETAILER</MonoLabel>
+    </div>
+
+    <h2 class="example-h">
+      ~$9,700/mo total. <em>That includes</em> the runtime, the network, and the priors.
+    </h2>
+
+    <div class="example-grid">
+      <KPICard label="HANDSHAKE" value="$1,200" suffix="/MO" detail="100K monthly handshakes · blended basic / standard at $0.012 avg" />
+      <KPICard label="BRIDGE" value="$7,500" suffix="/MO" detail="30K bridge calls (30% of handshakes) · mostly purchase-history at $0.25 · caller-side before supply-side share" />
+      <KPICard label="RUNTIME + NI" value="$999" suffix="/MO" detail="Growth tier · category-refined Network Intelligence bundled" />
+      <KPICard label="TOTAL" value="~$9,700" suffix="/MO" detail="Compare to Salesforce Agentforce 360 ARR: $20K–$100K+ /yr with neither bridge nor NI" />
+    </div>
+
+    <Callout variant="note">
+      <p>
+        <strong>Bridge target side flips to revenue.</strong> When other enterprises query data your customers
+        have consented to share: <em>50% to the calling enterprise</em>, <em>30% to you (pro-rata if multiple
+        targets)</em>, <em>20% to Chips</em>. Your bridge supply revenue scales with how interesting your
+        scope coverage is to the network.
+      </p>
+    </Callout>
+  </section>
+
+  <section class="cta-row">
+    <div class="cta-row-inner">
+      <Button href="mailto:hello@chips.dev?subject=Chips%20pricing" variant="primary">Talk pricing</Button>
+      <Button href="/how-it-works" variant="outline">How the meters work</Button>
+    </div>
+  </section>
+</Doc>
+
+<style>
+  .meters-grid {
+    display: grid;
+    gap: 28px;
+    grid-template-columns: 1fr 1fr;
+    margin-bottom: 64px;
+  }
+  .meters-grid > :nth-child(5) {
+    grid-column: 1 / -1;
+  }
+  .example {
+    border-top: 1px solid var(--hair);
+    padding-top: 56px;
+    margin-bottom: 56px;
+  }
+  .example-h {
+    font-family: var(--serif);
+    font-size: clamp(1.7rem, 2.2vw + 0.5rem, 2.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.018em;
+    font-weight: 400;
+    color: var(--ink);
+    margin: 0 0 40px;
+    max-width: 28ch;
+  }
+  .example-h em {
+    font-style: italic;
+    color: var(--emerald);
+  }
+  .example-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--hair);
+    margin-bottom: 32px;
+  }
+  .cta-row {
+    margin-top: 64px;
+  }
+  .cta-row-inner {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 900px) {
+    .meters-grid { grid-template-columns: 1fr; }
+    .example-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 500px) {
+    .example-grid { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,0 +1,59 @@
+---
+interface Props {
+  kind?: 'ok' | 'warn' | 'error' | 'neutral' | 'emerald';
+  pulse?: boolean;
+}
+
+const { kind = 'neutral', pulse = false } = Astro.props;
+---
+
+<span class:list={['pill', `pill-${kind}`, { pulse }]}>
+  {pulse && <span class="dot" aria-hidden="true" />}
+  <slot />
+</span>
+
+<style>
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 11px 4px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--hair-2);
+    color: var(--slate);
+    background: transparent;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .pill-ok,
+  .pill-emerald {
+    border-color: var(--emerald);
+    background: var(--emerald-soft);
+    color: var(--emerald-deep);
+  }
+  .pill-warn {
+    border-color: var(--gold);
+    background: #f7ecd6;
+    color: #735018;
+  }
+  .pill-error {
+    border-color: var(--crimson);
+    background: var(--rose-bg);
+    color: var(--rose-fg);
+  }
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--emerald);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; transform: scale(0.85); }
+    50%      { opacity: 1;   transform: scale(1); }
+  }
+</style>

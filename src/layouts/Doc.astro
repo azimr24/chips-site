@@ -1,0 +1,82 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  eyebrow: string;
+  heading: string;
+  lede?: string;
+  pageLabel?: string;
+}
+
+const { title, description, eyebrow, heading, lede, pageLabel } = Astro.props;
+---
+
+<Base title={title} description={description} pageLabel={pageLabel}>
+  <article class="doc">
+    <header class="doc-head shell">
+      <span class="eyebrow mono">{eyebrow}</span>
+      <h1 class="doc-title" set:html={heading} />
+      {lede && <p class="doc-lede">{lede}</p>}
+    </header>
+
+    <div class="shell doc-body">
+      <slot />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .doc {
+    padding: 32px 0 0;
+  }
+  .doc-head {
+    padding-top: 48px;
+    padding-bottom: 56px;
+    border-bottom: 1px solid var(--hair);
+    margin-bottom: 56px;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--emerald);
+    display: block;
+    margin-bottom: 24px;
+  }
+  .doc-title {
+    font-family: var(--serif);
+    font-size: clamp(2.25rem, 4.5vw + 0.5rem, 3.75rem);
+    line-height: 1;
+    letter-spacing: -0.024em;
+    font-weight: 400;
+    color: var(--ink);
+    margin: 0 0 24px;
+    max-width: 22ch;
+  }
+  .doc-title :global(em) {
+    font-style: italic;
+    color: var(--emerald);
+  }
+  .doc-title :global(.dot) {
+    color: var(--emerald);
+    font-style: normal;
+  }
+  .doc-lede {
+    font-family: var(--serif);
+    font-size: var(--fs-lede);
+    line-height: 1.4;
+    color: var(--slate);
+    max-width: 62ch;
+    margin: 0;
+  }
+  .doc-lede :global(em) {
+    font-style: italic;
+    color: var(--emerald);
+  }
+  .doc-body {
+    padding-bottom: 96px;
+  }
+</style>

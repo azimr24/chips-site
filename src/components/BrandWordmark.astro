@@ -1,0 +1,41 @@
+---
+interface Props {
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  as?: string;
+  href?: string;
+}
+
+const { size = 'md', as = 'span', href } = Astro.props;
+const Tag = href ? 'a' : (as as keyof HTMLElementTagNameMap);
+---
+
+<Tag class:list={['wordmark', `wordmark-${size}`]} href={href}>
+  Chips<span class="dot">.</span>
+</Tag>
+
+<style>
+  .wordmark {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 500;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: none;
+    display: inline-block;
+    line-height: 1;
+  }
+  .wordmark:hover {
+    color: var(--ink);
+    border-bottom: none;
+  }
+  .wordmark .dot {
+    color: var(--emerald);
+    font-style: normal;
+    margin-left: -0.04em;
+  }
+  .wordmark-sm { font-size: 18px; }
+  .wordmark-md { font-size: 26px; }
+  .wordmark-lg { font-size: 38px; }
+  .wordmark-xl { font-size: 72px; line-height: 0.95; }
+</style>

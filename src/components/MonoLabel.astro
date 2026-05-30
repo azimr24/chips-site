@@ -1,0 +1,35 @@
+---
+interface Props {
+  tone?: 'slate' | 'ink' | 'emerald' | 'rose';
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const { tone = 'slate', size = 'sm', class: className } = Astro.props;
+---
+
+<span class:list={['mono-label-cmp', `tone-${tone}`, `size-${size}`, className]}>
+  <slot />
+</span>
+
+<style>
+  .mono-label-cmp {
+    font-family: var(--mono);
+    font-weight: 500;
+    text-transform: uppercase;
+    line-height: 1;
+    display: inline-block;
+  }
+  .size-sm {
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+  }
+  .size-md {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+  }
+  .tone-slate { color: var(--slate); }
+  .tone-ink { color: var(--ink); }
+  .tone-emerald { color: var(--emerald); }
+  .tone-rose { color: var(--rose-fg); }
+</style>
