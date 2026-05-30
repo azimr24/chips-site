@@ -15,7 +15,7 @@ const CAL = 'https://cal.com/eugene-ye';
       <div class="hero-text">
         <div class="hero-eyebrow">
           <span class="line-mark" aria-hidden="true"></span>
-          <span class="eyebrow mono">INVISIBLE COMMERCE INFRASTRUCTURE · A2A · 2026</span>
+          <span class="eyebrow mono">INVISIBLE COMMERCE INFRASTRUCTURE · A2A · v0.6.1</span>
         </div>
 
         <h1 class="headline">
@@ -41,13 +41,34 @@ const CAL = 'https://cal.com/eugene-ye';
 
         <div class="hero-trace mono" aria-hidden="true">
           <span class="trace-mark">▍</span>
-          <span class="trace-text">trace · ${'{'}consumer.jwt → bridge.grant → enterprise.task{'}'} · 0.00µs idle</span>
+          <span class="trace-text" data-trace>trace · jwt:RS256 → bridge.grant:always → task:input-required → settle:rebate</span>
         </div>
       </div>
 
       <aside class="hero-switchboard" aria-label="Live A2A traffic between consumer agents and Chips-hosted enterprise agents">
         <Switchboard />
       </aside>
+    </div>
+  </section>
+
+  <!-- ACT I.5 — Three Pillars strip (legend for the constellation above) -->
+  <section class="pillars-strip" aria-label="The three primitives Chips ships">
+    <div class="shell pillars-grid">
+      <article class="pillar">
+        <span class="pillar-id mono"><span class="roman">I</span> · RUNTIME</span>
+        <h3 class="pillar-name">Hosted A2A<span class="dot">.</span></h3>
+        <p class="pillar-spec mono">multi-tenant · BYO LLM · 11 JSON-RPC</p>
+      </article>
+      <article class="pillar">
+        <span class="pillar-id mono"><span class="roman">II</span> · BRIDGE</span>
+        <h3 class="pillar-name">Cross-enterprise context<span class="dot">.</span></h3>
+        <p class="pillar-spec mono">consent-mediated · audit-logged · scope vocab</p>
+      </article>
+      <article class="pillar">
+        <span class="pillar-id mono"><span class="roman">III</span> · NETWORK</span>
+        <h3 class="pillar-name">Level B priors<span class="dot">.</span></h3>
+        <p class="pillar-spec mono">DP-aggregated · ε-bounded · compounding</p>
+      </article>
     </div>
   </section>
 
@@ -62,19 +83,19 @@ const CAL = 'https://cal.com/eugene-ye';
       </p>
 
       <p class="stanza">
-        We operate the layer between every agent<br />
-        and every brand the consumer has touched.
+        The bridge is the moat people see.<br />
+        Network learning is the moat that <em>compounds</em>.
       </p>
 
       <p class="stanza">
         The consumer never signs up.<br />
         Never sees a screen.<br />
-        That&rsquo;s the point.
+        That&rsquo;s the protocol.
       </p>
 
       <div class="manifesto-corner mono" aria-hidden="true">
         <span>00 · FIRST PRINCIPLES</span>
-        <span>chips.dev / 2026</span>
+        <span>chips.dev / v0.6.1</span>
       </div>
     </div>
   </section>
@@ -112,6 +133,54 @@ const CAL = 'https://cal.com/eugene-ye';
     </div>
   </section>
 </Base>
+
+<script>
+  // Hero trace cycling — crossfade through prepared A2A traces every ~4s.
+  // Uses textContent (safe DOM), single setInterval, pause on hidden tab.
+  const traces = [
+    'trace · jwt:RS256 → bridge.grant:always → task:input-required → settle:rebate',
+    'trace · oidc.email → bridge.query:purchase-history → task:completed · 287µs',
+    'trace · a2a.handshake → consent.granted:outdoor → priors:loaded · 47ms',
+    'trace · TASK_STATE_AUTH_REQUIRED → bridge.fan:3 → settle.shared',
+    'trace · runtime:tenant=rei → policy.yaml#L142 → outcome.purchase',
+  ];
+
+  function bootTrace() {
+    const el = document.querySelector<HTMLElement>('[data-trace]');
+    if (!el) return;
+    let idx = 0;
+    let timer: ReturnType<typeof setInterval> | null = null;
+
+    function cycle() {
+      if (document.hidden) return;
+      el.classList.add('trace-fading');
+      setTimeout(() => {
+        idx = (idx + 1) % traces.length;
+        el.textContent = traces[idx]!;
+        el.classList.remove('trace-fading');
+      }, 320);
+    }
+
+    function start() {
+      if (timer != null) return;
+      timer = setInterval(cycle, 4200);
+    }
+    function stop() {
+      if (timer != null) { clearInterval(timer); timer = null; }
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop(); else start();
+    });
+    start();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootTrace);
+  } else {
+    bootTrace();
+  }
+</script>
 
 <style is:global>
   /* Stagger reveal on hero — single page-load choreography */
@@ -343,12 +412,82 @@ const CAL = 'https://cal.com/eugene-ye';
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    transition: opacity 300ms ease;
+  }
+  .trace-text.trace-fading {
+    opacity: 0;
   }
 
   /* Hero — switchboard column */
   .hero-switchboard {
     width: 100%;
     align-self: center;
+  }
+
+  /* ──────────────── PILLARS STRIP ──────────────── */
+  .pillars-strip {
+    background: color-mix(in oklab, var(--bg-soft) 80%, transparent);
+    border-top: 1px solid var(--hair);
+    border-bottom: 1px solid var(--hair);
+    padding: 88px 0;
+    position: relative;
+  }
+  .pillars-strip::before {
+    /* a slow horizontal wash to evoke a printed band */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 12% 30%, color-mix(in oklab, var(--emerald) 5%, transparent), transparent 45%),
+      radial-gradient(ellipse at 88% 70%, color-mix(in oklab, var(--ink) 4%, transparent), transparent 45%);
+    pointer-events: none;
+  }
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .pillar {
+    padding: 0 40px;
+    border-right: 1px solid var(--hair);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .pillar:first-child { padding-left: 0; }
+  .pillar:last-child { padding-right: 0; border-right: none; }
+  .pillar-id {
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--slate);
+  }
+  .pillar-id .roman {
+    color: var(--emerald);
+    font-weight: 500;
+    margin-right: 1px;
+  }
+  .pillar-name {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 1.4vw + 0.9rem, 1.85rem);
+    line-height: 1.1;
+    letter-spacing: -0.014em;
+    font-weight: 400;
+    color: var(--ink);
+    margin: 0;
+    max-width: 18ch;
+  }
+  .pillar-name .dot {
+    color: var(--emerald);
+  }
+  .pillar-spec {
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: var(--slate);
+    margin: 0;
+    line-height: 1.5;
   }
 
   /* ──────────────── MANIFESTO ──────────────── */
@@ -518,6 +657,18 @@ const CAL = 'https://cal.com/eugene-ye';
     .hero-switchboard { order: 2; }
     .manifesto { padding: 96px 0 100px; }
     .closer { padding: 96px 0 80px; }
+    .pillars-strip { padding: 64px 0; }
+    .pillars-grid {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+    .pillar {
+      padding: 0;
+      border-right: none;
+      border-bottom: 1px solid var(--hair);
+      padding-bottom: 28px;
+    }
+    .pillar:last-child { border-bottom: none; padding-bottom: 0; }
   }
   @media (max-width: 560px) {
     .hero { padding: 28px 0 64px; }

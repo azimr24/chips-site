@@ -1,31 +1,78 @@
 ---
-const consumers = [
-  { id: 'chatgpt', name: 'CHATGPT', y: 116 },
-  { id: 'claude', name: 'CLAUDE', y: 198 },
-  { id: 'apple', name: 'APPLE INTEL.', y: 280 },
-  { id: 'perplexity', name: 'PERPLEXITY', y: 362 },
+// ─────────────────────────────────────────────────────────────────────────
+// Switchboard — Constellation
+// A2A handshake network. Bridge at center, consumer agents on a top arc,
+// enterprise agents on a bottom arc, always-visible faint spokes form a
+// graph, comets sweep along active spokes during handshakes.
+// ─────────────────────────────────────────────────────────────────────────
+
+interface NodeDef {
+  id: string;
+  name: string;
+  version: string;
+  x: number;
+  y: number;
+}
+
+const consumers: NodeDef[] = [
+  { id: 'chatgpt', name: 'CHATGPT', version: 'v1.1.x', x: 150, y: 112 },
+  { id: 'claude', name: 'CLAUDE', version: 'v1.8.x', x: 322, y: 82 },
+  { id: 'apple', name: 'APPLE INTEL.', version: 'v1.5.x', x: 482, y: 82 },
+  { id: 'perplexity', name: 'PERPLEXITY', version: 'v1.0.x', x: 654, y: 112 },
 ];
 
-const enterprises = [
-  { id: 'rei', name: 'REI', y: 88 },
-  { id: 'patagonia', name: 'PATAGONIA', y: 160 },
-  { id: 'backcountry', name: 'BACKCOUNTRY', y: 232 },
-  { id: 'smartwool', name: 'SMARTWOOL', y: 304 },
-  { id: 'moosejaw', name: 'MOOSEJAW', y: 376 },
-  { id: 'outdoor', name: 'OUTDOOR VOICES', y: 448 },
+const enterprises: NodeDef[] = [
+  { id: 'rei', name: 'REI', version: '.well-known/agent', x: 110, y: 470 },
+  { id: 'patagonia', name: 'PATAGONIA', version: '.well-known/agent', x: 232, y: 500 },
+  { id: 'backcountry', name: 'BACKCOUNTRY', version: '.well-known/agent', x: 358, y: 510 },
+  { id: 'smartwool', name: 'SMARTWOOL', version: '.well-known/agent', x: 478, y: 508 },
+  { id: 'moosejaw', name: 'MOOSEJAW', version: '.well-known/agent', x: 604, y: 496 },
+  { id: 'outdoor', name: 'OUTDOOR VOICES', version: '.well-known/agent', x: 712, y: 470 },
 ];
 
-const consumerDotX = 168;
-const consumerLabelX = 154;
-const enterpriseDotX = 532;
-const enterpriseLabelX = 546;
-const bridge = { x: 350, y: 270 };
+const bridge = { x: 400, y: 290 };
+
+// Hex polygon points (flat-top, radius 7) centered at origin
+const HEX_POINTS = '0,-7 6.06,-3.5 6.06,3.5 0,7 -6.06,3.5 -6.06,-3.5';
+
+// Build curved spoke paths (quadratic bezier) from each node to bridge.
+// Control point is offset perpendicular to the node→bridge line so each
+// spoke curves outward subtly — produces the constellation lens.
+function spokePath(nx: number, ny: number, bx: number, by: number): string {
+  const mx = (nx + bx) / 2;
+  const my = (ny + by) / 2;
+  const dx = bx - nx;
+  const dy = by - ny;
+  const len = Math.hypot(dx, dy) || 1;
+  // perpendicular unit vector
+  const px = -dy / len;
+  const py = dx / len;
+  // curve outward — bend amount scales with distance, capped
+  const bend = Math.min(28, len * 0.10);
+  // Sign of bend: for nodes left of center, curve left; right of center, curve right.
+  const sideSign = nx < bx ? -1 : 1;
+  const cx = mx + px * bend * sideSign;
+  const cy = my + py * bend * sideSign;
+  return `M ${nx} ${ny} Q ${cx.toFixed(2)} ${cy.toFixed(2)} ${bx} ${by}`;
+}
+
+const consumerSpokes = consumers.map((c) => ({
+  id: c.id,
+  side: 'consumer' as const,
+  d: spokePath(c.x, c.y, bridge.x, bridge.y),
+}));
+const enterpriseSpokes = enterprises.map((e) => ({
+  id: e.id,
+  side: 'enterprise' as const,
+  d: spokePath(e.x, e.y, bridge.x, bridge.y),
+}));
+const allSpokes = [...consumerSpokes, ...enterpriseSpokes];
 ---
 
-<figure class="switchboard" aria-label="Live A2A handshake monitor between consumer agents and enterprise agents through the Chips bridge">
+<figure class="switchboard" aria-label="Live A2A handshake constellation — consumer agents on a top arc, enterprise agents on a bottom arc, bridge core in center">
   <header class="sb-head">
     <div class="sb-head-l">
-      <span class="sb-id mono">A2A · ROUTING TABLE</span>
+      <span class="sb-id mono">A2A · CONSTELLATION</span>
       <span class="sb-id-sub mono">agents.chips.dev</span>
     </div>
     <div class="sb-head-r">
@@ -34,69 +81,109 @@ const bridge = { x: 350, y: 270 };
     </div>
   </header>
 
-  <svg class="sb-canvas" viewBox="0 0 700 540" preserveAspectRatio="xMidYMid meet" role="presentation">
+  <div class="sb-stats mono" aria-hidden="true">
+    <div class="sb-stat">
+      <span class="sb-stat-value" data-stat="handshakes">4,287</span>
+      <span class="sb-stat-label">HANDSHAKES / MIN</span>
+    </div>
+    <div class="sb-stat">
+      <span class="sb-stat-value" data-stat="bridge">612</span>
+      <span class="sb-stat-label">BRIDGE CALLS</span>
+    </div>
+    <div class="sb-stat">
+      <span class="sb-stat-value">
+        <span class="sb-eps-sym">ε</span>
+        <span data-stat="epsilon">0.31</span>
+        <span class="sb-eps-cap">/ 1.00</span>
+      </span>
+      <span class="sb-stat-label">DP BUDGET · ANNUAL</span>
+    </div>
+  </div>
+
+  <svg class="sb-canvas" viewBox="0 0 800 580" preserveAspectRatio="xMidYMid meet" role="presentation">
     <defs>
-      <pattern id="sb-grid" width="28" height="28" patternUnits="userSpaceOnUse">
-        <path d="M 28 0 L 0 0 0 28" fill="none" stroke="currentColor" stroke-width="0.4" />
-      </pattern>
-      <radialGradient id="sb-bridge-grad" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#3e8e5e" stop-opacity="0.35" />
-        <stop offset="60%" stop-color="#3e8e5e" stop-opacity="0.12" />
+      <radialGradient id="sb-bridge-glow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#3e8e5e" stop-opacity="0.45" />
+        <stop offset="55%" stop-color="#3e8e5e" stop-opacity="0.12" />
         <stop offset="100%" stop-color="#3e8e5e" stop-opacity="0" />
       </radialGradient>
+      <filter id="sb-soft" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="0.7" />
+      </filter>
     </defs>
 
-    <rect class="sb-grid-bg" width="700" height="540" fill="url(#sb-grid)" />
+    <!-- Ambient concentric grid rings -->
+    <g class="sb-grid-rings" aria-hidden="true">
+      <circle cx={bridge.x} cy={bridge.y} r="105" />
+      <circle cx={bridge.x} cy={bridge.y} r="175" />
+      <circle cx={bridge.x} cy={bridge.y} r="250" />
+      <circle cx={bridge.x} cy={bridge.y} r="325" />
+    </g>
 
-    <!-- column headers -->
-    <text class="sb-col-head" x={consumerLabelX} y="50" text-anchor="end">CONSUMER · CALLER</text>
-    <text class="sb-col-head" x={enterpriseLabelX} y="50" text-anchor="start">ENTERPRISE · CALLEE</text>
-    <text class="sb-col-head sb-bridge-head" x={bridge.x} y="50" text-anchor="middle">BRIDGE</text>
+    <!-- Sonar ring (animated on bridge activity) -->
+    <circle class="sb-sonar" cx={bridge.x} cy={bridge.y} r="95" />
 
-    <!-- column rules -->
-    <line class="sb-col-rule" x1={consumerDotX} y1="68" x2={consumerDotX} y2="490" />
-    <line class="sb-col-rule" x1={enterpriseDotX} y1="68" x2={enterpriseDotX} y2="490" />
+    <!-- At-rest spokes — always visible network density -->
+    <g class="sb-spokes-rest" aria-hidden="true">
+      {allSpokes.map((s) => (
+        <path class="sb-spoke-rest" d={s.d} data-side={s.side} data-id={s.id} />
+      ))}
+    </g>
 
-    <!-- bridge cluster -->
+    <!-- Active comet layer (JS appends paths here) -->
+    <g class="sb-comets" aria-hidden="true"></g>
+
+    <!-- Bridge instrument panel -->
     <g class="sb-bridge" transform={`translate(${bridge.x}, ${bridge.y})`}>
-      <circle class="sb-halo" r="68" fill="url(#sb-bridge-grad)" />
-      <circle class="sb-halo-2" r="38" fill="none" stroke="#3e8e5e" stroke-opacity="0.25" />
-      <circle class="sb-halo-3" r="24" fill="none" stroke="#3e8e5e" stroke-opacity="0.45" />
-      <circle class="sb-core" r="9" fill="#3e8e5e" />
-      <text class="sb-bridge-id mono" y="-90" text-anchor="middle">·</text>
+      <text class="sb-bridge-label mono" y="-78" text-anchor="middle">BRIDGE</text>
+      <circle class="sb-bridge-halo" r="58" fill="url(#sb-bridge-glow)" />
+      <circle class="sb-bridge-mid" r="22" />
+      <circle class="sb-bridge-core" r="7.5" />
+      <text class="sb-eps mono" y="36" text-anchor="middle">
+        <tspan class="sb-eps-pre">ε ·</tspan>
+        <tspan class="sb-eps-num" data-stat-svg="epsilon" dx="3">0.31</tspan>
+        <tspan class="sb-eps-cap" dx="3">/ 1.00</tspan>
+      </text>
+      <line class="sb-instr-rule" x1="-58" x2="58" y1="46" y2="46" />
+      <g class="sb-scopes" aria-hidden="true">
+        <g transform="translate(0, 60)">
+          <text class="sb-scope mono" data-scope="loyalty-tier" x="-44" text-anchor="middle">LOY</text>
+          <text class="sb-scope mono" data-scope="purchase-history" x="0" text-anchor="middle">PURCH</text>
+          <text class="sb-scope mono" data-scope="size-profile" x="44" text-anchor="middle">SIZE</text>
+        </g>
+        <g transform="translate(0, 74)">
+          <text class="sb-scope mono" data-scope="behavioral-profile" x="-44" text-anchor="middle">BEHAV</text>
+          <text class="sb-scope mono" data-scope="category-recent" x="0" text-anchor="middle">CAT</text>
+          <text class="sb-scope mono" data-scope="attested-claims" x="44" text-anchor="middle">ATTEST</text>
+        </g>
+      </g>
     </g>
 
-    <!-- consumer nodes -->
-    <g class="sb-col sb-col-consumer">
+    <!-- Consumer nodes (top arc) -->
+    <g class="sb-nodes sb-nodes-consumer">
       {consumers.map((c) => (
-        <g class="sb-node" data-side="consumer" data-id={c.id} transform={`translate(0, ${c.y})`}>
-          <text class="sb-node-label mono" x={consumerLabelX} y="0" text-anchor="end">{c.name}</text>
-          <text class="sb-node-meta mono" x={consumerLabelX} y="14" text-anchor="end">v1.{(c.id.length * 13) % 10}.x</text>
-          <line class="sb-node-tick" x1={consumerLabelX + 6} x2={consumerDotX - 6} y1="-3" y2="-3" />
-          <circle class="sb-node-dot" cx={consumerDotX} cy="-3" r="4" />
+        <g class="sb-node sb-node-consumer" data-side="consumer" data-id={c.id} transform={`translate(${c.x}, ${c.y})`}>
+          <circle class="sb-node-ring" r="14" />
+          <polygon class="sb-glyph" points={HEX_POINTS} />
+          <circle class="sb-glyph-dot" r="1.6" />
+          <text class="sb-node-label mono" y="28" text-anchor="middle">{c.name}</text>
+          <text class="sb-node-meta mono" y="40" text-anchor="middle">{c.version}</text>
         </g>
       ))}
     </g>
 
-    <!-- enterprise nodes -->
-    <g class="sb-col sb-col-enterprise">
+    <!-- Enterprise nodes (bottom arc) -->
+    <g class="sb-nodes sb-nodes-enterprise">
       {enterprises.map((e) => (
-        <g class="sb-node" data-side="enterprise" data-id={e.id} transform={`translate(0, ${e.y})`}>
-          <circle class="sb-node-dot" cx={enterpriseDotX} cy="-3" r="4" />
-          <line class="sb-node-tick" x1={enterpriseDotX + 6} x2={enterpriseLabelX - 6} y1="-3" y2="-3" />
-          <text class="sb-node-label mono" x={enterpriseLabelX} y="0" text-anchor="start">{e.name}</text>
-          <text class="sb-node-meta mono" x={enterpriseLabelX} y="14" text-anchor="start">.well-known/agent</text>
+        <g class="sb-node sb-node-enterprise" data-side="enterprise" data-id={e.id} transform={`translate(${e.x}, ${e.y})`}>
+          <circle class="sb-node-ring" r="14" />
+          <circle class="sb-glyph" r="7" />
+          <circle class="sb-glyph-inner" r="3" />
+          <text class="sb-node-label mono" y="-20" text-anchor="middle">{e.name}</text>
+          <text class="sb-node-meta mono" y="-32" text-anchor="middle">{e.version}</text>
         </g>
       ))}
     </g>
-
-    <!-- live paths layer (populated by JS) -->
-    <g class="sb-paths"></g>
-
-    <!-- bottom rail -->
-    <line class="sb-rail" x1="0" y1="510" x2="700" y2="510" />
-    <text class="sb-rail-l mono" x="20" y="528" text-anchor="start">SCOPE · CONSENT-MEDIATED</text>
-    <text class="sb-rail-r mono" x="680" y="528" text-anchor="end">RS256 · A2A v1</text>
   </svg>
 
   <footer class="sb-feed">
@@ -111,125 +198,195 @@ const bridge = { x: 350, y: 270 };
 </figure>
 
 <script>
-  type Node = { id: string; name: string; y: number };
+  type Side = 'consumer' | 'enterprise';
+  interface SwitchNode { id: string; name: string; version: string; x: number; y: number; }
+  interface SpokeData { id: string; side: Side; d: string; }
 
-  const consumers: Node[] = [
-    { id: 'chatgpt', name: 'CHATGPT', y: 116 },
-    { id: 'claude', name: 'CLAUDE', y: 198 },
-    { id: 'apple', name: 'APPLE INTEL.', y: 280 },
-    { id: 'perplexity', name: 'PERPLEXITY', y: 362 },
+  const consumers: SwitchNode[] = [
+    { id: 'chatgpt', name: 'CHATGPT', version: 'v1.1.x', x: 150, y: 112 },
+    { id: 'claude', name: 'CLAUDE', version: 'v1.8.x', x: 322, y: 82 },
+    { id: 'apple', name: 'APPLE INTEL.', version: 'v1.5.x', x: 482, y: 82 },
+    { id: 'perplexity', name: 'PERPLEXITY', version: 'v1.0.x', x: 654, y: 112 },
   ];
-
-  const enterprises: Node[] = [
-    { id: 'rei', name: 'REI', y: 88 },
-    { id: 'patagonia', name: 'PATAGONIA', y: 160 },
-    { id: 'backcountry', name: 'BACKCOUNTRY', y: 232 },
-    { id: 'smartwool', name: 'SMARTWOOL', y: 304 },
-    { id: 'moosejaw', name: 'MOOSEJAW', y: 376 },
-    { id: 'outdoor', name: 'OUTDOOR VOICES', y: 448 },
+  const enterprises: SwitchNode[] = [
+    { id: 'rei', name: 'REI', version: '.well-known', x: 110, y: 470 },
+    { id: 'patagonia', name: 'PATAGONIA', version: '.well-known', x: 232, y: 500 },
+    { id: 'backcountry', name: 'BACKCOUNTRY', version: '.well-known', x: 358, y: 510 },
+    { id: 'smartwool', name: 'SMARTWOOL', version: '.well-known', x: 478, y: 508 },
+    { id: 'moosejaw', name: 'MOOSEJAW', version: '.well-known', x: 604, y: 496 },
+    { id: 'outdoor', name: 'OUTDOOR VOICES', version: '.well-known', x: 712, y: 470 },
   ];
+  const BRIDGE = { x: 400, y: 290 };
 
   const intents = [
-    'ski-layering', 'winter-jacket', 'trail-runner', 'baselayer',
-    'rain-shell', 'down-bag', 'fit-check', 'gift-recs', 'wool-socks',
-    'pack-fit', 'glove-pair', 'sleep-system',
+    'ski-layering', 'winter-jacket', 'trail-runner', 'baselayer', 'rain-shell',
+    'down-bag', 'fit-check', 'gift-recs', 'wool-socks', 'pack-fit',
+    'glove-pair', 'sleep-system', 'mid-layer', 'hardshell',
   ];
-
   const scopes = [
     'loyalty-tier', 'purchase-history', 'size-profile',
     'behavioral-profile', 'category-recent', 'attested-claims',
   ];
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
-  const consumerDotX = 168;
-  const enterpriseDotX = 532;
-  const bridge = { x: 350, y: 270 };
 
-  function rand<T>(arr: T[]): T {
-    return arr[Math.floor(Math.random() * arr.length)] as T;
-  }
-  function jitter(base: number, spread: number) {
-    return base + (Math.random() - 0.5) * spread;
-  }
-  function pad(n: number, w = 2) {
-    return n.toString().padStart(w, '0');
+  function rand<T>(arr: T[]): T { return arr[Math.floor(Math.random() * arr.length)] as T; }
+  function jitter(base: number, spread: number) { return base + (Math.random() - 0.5) * spread; }
+  function pad(n: number, w = 2) { return n.toString().padStart(w, '0'); }
+  function fmtInt(n: number): string { return n.toLocaleString('en-US'); }
+
+  function spokeD(nx: number, ny: number): string {
+    const bx = BRIDGE.x, by = BRIDGE.y;
+    const mx = (nx + bx) / 2;
+    const my = (ny + by) / 2;
+    const dx = bx - nx;
+    const dy = by - ny;
+    const len = Math.hypot(dx, dy) || 1;
+    const px = -dy / len, py = dx / len;
+    const bend = Math.min(28, len * 0.10);
+    const sideSign = nx < bx ? -1 : 1;
+    const cx = mx + px * bend * sideSign;
+    const cy = my + py * bend * sideSign;
+    return `M ${nx} ${ny} Q ${cx.toFixed(2)} ${cy.toFixed(2)} ${bx} ${by}`;
   }
 
   function init(root: HTMLElement) {
     const svg = root.querySelector('.sb-canvas') as SVGSVGElement | null;
-    const pathsGroup = root.querySelector('.sb-paths') as SVGGElement | null;
+    const cometsLayer = root.querySelector('.sb-comets') as SVGGElement | null;
     const bridgeEl = root.querySelector('.sb-bridge') as SVGGElement | null;
+    const sonar = root.querySelector('.sb-sonar') as SVGCircleElement | null;
     const feedRows = root.querySelector('.sb-feed-rows') as HTMLOListElement | null;
     const clockEl = root.querySelector('[data-clock]') as HTMLElement | null;
-    if (!svg || !pathsGroup || !bridgeEl || !feedRows || !clockEl) return;
+    const statHandshakes = root.querySelector('[data-stat="handshakes"]') as HTMLElement | null;
+    const statBridge = root.querySelector('[data-stat="bridge"]') as HTMLElement | null;
+    const statEpsilon = root.querySelector('[data-stat="epsilon"]') as HTMLElement | null;
+    const statEpsilonSvg = root.querySelector('[data-stat-svg="epsilon"]') as SVGTSpanElement | null;
 
-    // synthetic clock — accelerated, drifting
-    let virtualNow = Date.now() - 3 * 3600 * 1000 + Math.floor(Math.random() * 6 * 3600 * 1000);
+    if (!svg || !cometsLayer || !bridgeEl || !sonar || !feedRows) return;
+
+    // Synthetic clock & stats
+    let virtualNow = Date.now() - 3 * 3600 * 1000 + Math.floor(Math.random() * 8 * 3600 * 1000);
+    let handshakeCount = 4287 + Math.floor(Math.random() * 200);
+    let bridgeCallCount = 612 + Math.floor(Math.random() * 30);
+    let epsilon = 0.31 + Math.random() * 0.05;
 
     function paintClock() {
+      if (!clockEl) return;
       const d = new Date(virtualNow);
       clockEl.textContent = `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())} UTC`;
     }
+    function paintStats() {
+      if (statHandshakes) statHandshakes.textContent = fmtInt(handshakeCount);
+      if (statBridge) statBridge.textContent = fmtInt(bridgeCallCount);
+      const epsStr = epsilon.toFixed(3);
+      if (statEpsilon) statEpsilon.textContent = epsStr;
+      if (statEpsilonSvg) statEpsilonSvg.textContent = epsStr;
+    }
     paintClock();
-    setInterval(() => {
+    paintStats();
+
+    const clockTimer = setInterval(() => {
       virtualNow += 1000;
       paintClock();
     }, 1000);
 
-    let counter = 0;
-    let nextTimer: ReturnType<typeof setTimeout> | null = null;
+    // Resolve node coordinates by id
+    function nodeById(side: Side, id: string): SwitchNode | undefined {
+      const arr = side === 'consumer' ? consumers : enterprises;
+      return arr.find((n) => n.id === id);
+    }
 
-    function flashNode(side: 'consumer' | 'enterprise', id: string, delay = 0) {
-      const node = root.querySelector<SVGGElement>(
-        `.sb-node[data-side="${side}"][data-id="${id}"]`
-      );
+    function flashNode(side: Side, id: string, delay = 0) {
+      const node = root.querySelector<SVGGElement>(`.sb-node[data-side="${side}"][data-id="${id}"]`);
       if (!node) return;
       setTimeout(() => {
-        node.classList.add('sb-node-flash');
-        setTimeout(() => node.classList.remove('sb-node-flash'), 480);
+        node.classList.add('sb-node-active');
+        setTimeout(() => node.classList.remove('sb-node-active'), 700);
       }, delay);
     }
 
-    function pulseBridge(intensity: 'normal' | 'strong' = 'normal') {
-      bridgeEl.classList.add(intensity === 'strong' ? 'sb-bridge-strong' : 'sb-bridge-active');
+    function flashSpokeRest(side: Side, id: string, delay = 0) {
+      const spoke = root.querySelector<SVGPathElement>(`.sb-spoke-rest[data-side="${side}"][data-id="${id}"]`);
+      if (!spoke) return;
+      setTimeout(() => {
+        spoke.classList.add('sb-spoke-bright');
+        setTimeout(() => spoke.classList.remove('sb-spoke-bright'), 900);
+      }, delay);
+    }
+
+    function flashScopeTag(scope: string, delay = 0) {
+      const tag = root.querySelector<SVGTextElement>(`.sb-scope[data-scope="${scope}"]`);
+      if (!tag) return;
+      setTimeout(() => {
+        tag.classList.add('sb-scope-active');
+        setTimeout(() => tag.classList.remove('sb-scope-active'), 500);
+      }, delay);
+    }
+
+    function pulseSonar(strong = false) {
+      sonar.classList.remove('sb-sonar-firing', 'sb-sonar-firing-strong');
+      // Force reflow so re-adding the class restarts the animation
+      void sonar.getBoundingClientRect();
+      sonar.classList.add(strong ? 'sb-sonar-firing-strong' : 'sb-sonar-firing');
       setTimeout(
-        () => bridgeEl.classList.remove('sb-bridge-active', 'sb-bridge-strong'),
-        intensity === 'strong' ? 700 : 420
+        () => sonar.classList.remove('sb-sonar-firing', 'sb-sonar-firing-strong'),
+        strong ? 900 : 600,
       );
     }
 
-    function drawPath(consumer: Node, enterprise: Node, isBridge = false): SVGPathElement {
-      const sx = consumerDotX;
-      const sy = consumer.y - 3;
-      const ex = enterpriseDotX;
-      const ey = enterprise.y - 3;
-      const mx = bridge.x;
-      const my = bridge.y;
+    function pulseBridge(strong = false) {
+      bridgeEl.classList.add(strong ? 'sb-bridge-strong' : 'sb-bridge-active');
+      setTimeout(
+        () => bridgeEl.classList.remove('sb-bridge-active', 'sb-bridge-strong'),
+        strong ? 700 : 420,
+      );
+    }
 
-      const d = `M ${sx} ${sy} C ${sx + 90} ${sy}, ${mx - 70} ${my}, ${mx} ${my} C ${mx + 70} ${my}, ${ex - 90} ${ey}, ${ex} ${ey}`;
+    function drawComet(node: SwitchNode, isBridgeFan = false, scopeLabel?: string) {
+      const d = spokeD(node.x, node.y);
 
       const path = document.createElementNS(SVG_NS, 'path');
       path.setAttribute('d', d);
       path.setAttribute('fill', 'none');
-      path.setAttribute('stroke', '#3e8e5e');
-      path.setAttribute('stroke-width', isBridge ? '0.9' : '1.3');
-      path.setAttribute('stroke-linecap', 'round');
       path.setAttribute('pathLength', '100');
-      path.setAttribute('stroke-dasharray', '100 100');
-      path.setAttribute('stroke-dashoffset', '100');
-      path.setAttribute('opacity', '0');
-      path.classList.add('sb-path');
-      if (isBridge) path.classList.add('sb-path-bridge');
+      path.setAttribute('class', isBridgeFan ? 'sb-comet sb-comet-fan' : 'sb-comet');
+      cometsLayer.appendChild(path);
 
-      pathsGroup.appendChild(path);
-      requestAnimationFrame(() => path.classList.add('sb-path-active'));
-      setTimeout(() => path.remove(), 1700);
-      return path;
+      // Trail (lower-opacity dash that lingers slightly behind)
+      const trail = document.createElementNS(SVG_NS, 'path');
+      trail.setAttribute('d', d);
+      trail.setAttribute('fill', 'none');
+      trail.setAttribute('pathLength', '100');
+      trail.setAttribute('class', isBridgeFan ? 'sb-comet-trail sb-comet-trail-fan' : 'sb-comet-trail');
+      cometsLayer.appendChild(trail);
+
+      // Optional scope label that rides at midpath (bridge-fan only)
+      let token: SVGGElement | null = null;
+      if (isBridgeFan && scopeLabel) {
+        const midX = (node.x + BRIDGE.x) / 2;
+        const midY = (node.y + BRIDGE.y) / 2;
+        token = document.createElementNS(SVG_NS, 'g');
+        token.setAttribute('class', 'sb-scope-token');
+        token.setAttribute('transform', `translate(${midX.toFixed(1)}, ${midY.toFixed(1)})`);
+        const tokenText = document.createElementNS(SVG_NS, 'text');
+        tokenText.setAttribute('text-anchor', 'middle');
+        tokenText.setAttribute('class', 'mono');
+        tokenText.textContent = scopeLabel;
+        token.appendChild(tokenText);
+        cometsLayer.appendChild(token);
+      }
+
+      // Remove after animation completes
+      setTimeout(() => {
+        path.remove();
+        trail.remove();
+        if (token) token.remove();
+      }, 1500);
     }
 
     function addFeedRow(opts: {
-      consumer: Node;
-      enterprise: Node;
+      consumer: SwitchNode;
+      enterprise: SwitchNode;
       intent: string;
       scope: string;
       latency: number;
@@ -238,6 +395,10 @@ const bridge = { x: 350, y: 270 };
       virtualNow += Math.floor(jitter(900, 700));
       const d = new Date(virtualNow);
       const ts = `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}.${pad(d.getUTCMilliseconds(), 3)}`;
+
+      const latTier =
+        opts.latency < 300 ? 'fast' :
+        opts.latency < 600 ? 'normal' : 'slow';
 
       const li = document.createElement('li');
       li.className = `sb-row sb-row-${opts.kind}`;
@@ -248,15 +409,17 @@ const bridge = { x: 350, y: 270 };
 
       const routeEl = document.createElement('span');
       routeEl.className = 'sb-route mono';
-      const consumerName = document.createTextNode(opts.consumer.name);
       const arrowEl = document.createElement('span');
       arrowEl.className = 'sb-arrow';
       arrowEl.textContent = opts.kind === 'bridge' ? ' ⇉ ' : ' → ';
-      const enterpriseName = document.createTextNode(opts.enterprise.name);
-      routeEl.append(consumerName, arrowEl, enterpriseName);
+      routeEl.append(
+        document.createTextNode(opts.consumer.name),
+        arrowEl,
+        document.createTextNode(opts.enterprise.name),
+      );
 
       const scopeEl = document.createElement('span');
-      scopeEl.className = 'sb-scope mono';
+      scopeEl.className = 'sb-scope-col mono';
       scopeEl.append(document.createTextNode(opts.intent));
       const scopeDim = document.createElement('span');
       scopeDim.className = 'sb-scope-dim';
@@ -264,7 +427,7 @@ const bridge = { x: 350, y: 270 };
       scopeEl.append(scopeDim);
 
       const latEl = document.createElement('span');
-      latEl.className = 'sb-lat mono';
+      latEl.className = `sb-lat mono sb-lat-${latTier}`;
       latEl.append(document.createTextNode(String(opts.latency)));
       const latUnit = document.createElement('span');
       latUnit.className = 'sb-lat-unit';
@@ -272,21 +435,32 @@ const bridge = { x: 350, y: 270 };
       latEl.append(latUnit);
 
       li.append(tsEl, routeEl, scopeEl, latEl);
-
       feedRows.prepend(li);
 
-      // Trim overflow. CRITICAL: removal is async (400ms for fade), so
-      // children.length doesn't drop inside this scope — use a single
-      // overflow snapshot + skip already-marked rows to avoid an infinite
-      // loop or duplicate-scheduling memory leak.
+      // Trim — sync snapshot, never a while loop on async removal.
       const overflow = Array.from(feedRows.children).slice(6);
       for (const el of overflow) {
         if (el.classList.contains('sb-row-out')) continue;
         el.classList.add('sb-row-out');
         setTimeout(() => el.remove(), 400);
       }
-
       requestAnimationFrame(() => li.classList.add('sb-row-in'));
+    }
+
+    let counter = 0;
+    let nextTimer: ReturnType<typeof setTimeout> | null = null;
+    const stagedTimers: Set<ReturnType<typeof setTimeout>> = new Set();
+    function stage(fn: () => void, delay: number) {
+      const t = setTimeout(() => {
+        stagedTimers.delete(t);
+        fn();
+      }, delay);
+      stagedTimers.add(t);
+      return t;
+    }
+    function clearStaged() {
+      for (const t of stagedTimers) clearTimeout(t);
+      stagedTimers.clear();
     }
 
     function scheduleNext(delay: number) {
@@ -304,75 +478,108 @@ const bridge = { x: 350, y: 270 };
       const enterprise = rand(enterprises);
       const intent = rand(intents);
       const scope = rand(scopes);
-      const latency = Math.round(jitter(360, 320));
+      const latency = Math.round(jitter(380, 380));
 
-      drawPath(consumer, enterprise, false);
+      // Tick stats
+      handshakeCount += 1;
+      epsilon = Math.min(1.0, epsilon + 0.0008 + Math.random() * 0.0012);
+      paintStats();
+
+      // Stage 1 — Consumer ignites
       flashNode('consumer', consumer.id, 0);
-      flashNode('enterprise', enterprise.id, 700);
-      setTimeout(() => pulseBridge('normal'), 380);
+      flashSpokeRest('consumer', consumer.id, 0);
+      drawComet(consumer);
 
-      addFeedRow({ consumer, enterprise, intent, scope, latency, kind: 'handshake' });
+      // Stage 2 — Bridge arrival
+      stage(() => {
+        pulseSonar(false);
+        pulseBridge(false);
+        flashScopeTag(scope);
+      }, 480);
 
+      // Stage 3 — Enterprise receives
+      stage(() => {
+        drawComet(enterprise);
+        flashSpokeRest('enterprise', enterprise.id);
+      }, 540);
+      stage(() => flashNode('enterprise', enterprise.id), 1020);
+
+      // Feed row (logged with original latency)
+      stage(() => addFeedRow({ consumer, enterprise, intent, scope, latency, kind: 'handshake' }), 460);
+
+      // Bridge fan-out — every 5th event
       if (isBridge) {
-        // Fan-out: bridge query to two more enterprises
+        bridgeCallCount += 1;
+
         const others = enterprises.filter((e) => e.id !== enterprise.id);
-        const e2 = rand(others);
-        const e3 = rand(others.filter((e) => e.id !== e2.id));
+        // Shuffle, pick two
+        for (let i = others.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [others[i], others[j]] = [others[j]!, others[i]!];
+        }
+        const e2 = others[0]!;
+        const e3 = others[1]!;
+        const scope2 = rand(scopes.filter((s) => s !== scope));
+        const scope3 = rand(scopes.filter((s) => s !== scope && s !== scope2));
 
-        setTimeout(() => {
-          drawPath(consumer, e2, true);
-          flashNode('enterprise', e2.id, 600);
-          pulseBridge('strong');
-        }, 220);
+        // Strong sonar + bridge pulse on fan moment
+        stage(() => pulseSonar(true), 540);
+        stage(() => pulseBridge(true), 540);
 
-        setTimeout(() => {
-          drawPath(consumer, e3, true);
-          flashNode('enterprise', e3.id, 600);
-        }, 380);
+        stage(() => {
+          drawComet(e2, true, scope2);
+          flashSpokeRest('enterprise', e2.id);
+          flashScopeTag(scope2);
+        }, 620);
+        stage(() => flashNode('enterprise', e2.id), 1100);
 
-        setTimeout(() => {
-          addFeedRow({
-            consumer,
-            enterprise: e2,
-            intent,
-            scope: 'category-recent',
-            latency: Math.round(jitter(520, 280)),
-            kind: 'bridge',
-          });
-        }, 240);
-        setTimeout(() => {
-          addFeedRow({
-            consumer,
-            enterprise: e3,
-            intent,
-            scope: 'purchase-history',
-            latency: Math.round(jitter(480, 260)),
-            kind: 'bridge',
-          });
-        }, 420);
+        stage(() => {
+          drawComet(e3, true, scope3);
+          flashSpokeRest('enterprise', e3.id);
+          flashScopeTag(scope3);
+        }, 740);
+        stage(() => flashNode('enterprise', e3.id), 1220);
+
+        stage(() => addFeedRow({
+          consumer, enterprise: e2, intent,
+          scope: scope2, latency: Math.round(jitter(520, 280)),
+          kind: 'bridge',
+        }), 660);
+        stage(() => addFeedRow({
+          consumer, enterprise: e3, intent,
+          scope: scope3, latency: Math.round(jitter(480, 260)),
+          kind: 'bridge',
+        }), 780);
       }
 
       counter++;
-
       const nextDelay = isBridge ? jitter(2600, 600) : jitter(1700, 700);
       scheduleNext(nextDelay);
     }
 
-    // pause animation when tab is hidden — prevents background-tab
-    // setTimeout buildup and CPU spend while the user isn't looking
+    // Pause on hidden tab
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) {
         if (nextTimer != null) {
           clearTimeout(nextTimer);
           nextTimer = null;
         }
+        clearStaged();
       } else if (nextTimer == null) {
         scheduleNext(500);
       }
     });
 
-    // start
+    // Boot
     scheduleNext(700);
+
+    // Cleanup on detach (defensive — Astro static site usually doesn't detach,
+    // but if Astro view transitions are added later this is safe)
+    return () => {
+      clearInterval(clockTimer);
+      if (nextTimer != null) clearTimeout(nextTimer);
+      clearStaged();
+    };
   }
 
   function boot() {
@@ -387,33 +594,31 @@ const bridge = { x: 350, y: 270 };
 </script>
 
 <style>
+  /* ─────────────────── Container ─────────────────── */
   .switchboard {
     margin: 0;
     border: 1px solid var(--hair);
-    background: color-mix(in oklab, var(--bg) 60%, transparent);
+    background: color-mix(in oklab, var(--bg) 62%, transparent);
     border-radius: 4px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     box-shadow:
       0 1px 0 color-mix(in oklab, var(--ink) 4%, transparent),
-      0 32px 64px -32px color-mix(in oklab, var(--ink) 16%, transparent);
+      0 36px 72px -32px color-mix(in oklab, var(--ink) 18%, transparent);
   }
 
+  /* ─────────────────── Header ─────────────────── */
   .sb-head {
     border-bottom: 1px solid var(--hair);
-    padding: 14px 20px 13px;
+    padding: 13px 20px 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
     background: color-mix(in oklab, var(--bg-soft) 80%, transparent);
   }
-  .sb-head-l, .sb-head-r {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-  }
+  .sb-head-l, .sb-head-r { display: flex; align-items: center; gap: 18px; }
   .sb-id {
     font-size: 10.5px;
     letter-spacing: 0.2em;
@@ -452,161 +657,351 @@ const bridge = { x: 350, y: 270 };
     50%      { opacity: 1; transform: scale(1); }
   }
 
+  /* ─────────────────── Stats strip ─────────────────── */
+  .sb-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border-bottom: 1px solid var(--hair);
+    background: color-mix(in oklab, var(--bg-soft) 50%, transparent);
+  }
+  .sb-stat {
+    padding: 11px 18px 10px;
+    border-right: 1px solid color-mix(in oklab, var(--hair) 70%, transparent);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    align-items: flex-start;
+  }
+  .sb-stat:last-child { border-right: none; }
+  .sb-stat-value {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--emerald);
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+  }
+  .sb-stat-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--slate);
+    text-transform: uppercase;
+  }
+  .sb-eps-sym { font-style: italic; margin-right: 1px; color: var(--emerald-deep, #2f7048); }
+  .sb-eps-cap { color: var(--slate); margin-left: 4px; font-size: 11px; opacity: 0.75; }
+
+  /* ─────────────────── Canvas ─────────────────── */
   .sb-canvas {
     width: 100%;
     height: auto;
     display: block;
-    color: var(--hair-2);
+    cursor: crosshair;
+    animation: sb-float 9s ease-in-out infinite;
+  }
+  @keyframes sb-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-1.4px); }
   }
 
-  .sb-grid-bg {
-    opacity: 0.5;
+  /* Grid rings */
+  .sb-grid-rings circle {
+    fill: none;
+    stroke: var(--hair-2);
+    stroke-width: 0.5;
+    opacity: 0.32;
   }
 
-  .sb-col-head {
+  /* Sonar */
+  .sb-sonar {
+    fill: none;
+    stroke: var(--emerald);
+    stroke-width: 1.4px;
+    opacity: 0;
+    transform-origin: 400px 290px;
+    pointer-events: none;
+  }
+  .sb-sonar-firing {
+    animation: sb-sonar-pulse 600ms ease-out forwards;
+  }
+  .sb-sonar-firing-strong {
+    animation: sb-sonar-pulse-strong 900ms ease-out forwards;
+  }
+  @keyframes sb-sonar-pulse {
+    0%   { transform: scale(0.78); opacity: 0.55; stroke-width: 1.4px; }
+    100% { transform: scale(1.55); opacity: 0; stroke-width: 0.3px; }
+  }
+  @keyframes sb-sonar-pulse-strong {
+    0%   { transform: scale(0.72); opacity: 0.7; stroke-width: 1.8px; }
+    50%  { opacity: 0.55; }
+    100% { transform: scale(1.95); opacity: 0; stroke-width: 0.3px; }
+  }
+
+  /* Spokes at rest */
+  .sb-spoke-rest {
+    fill: none;
+    stroke: var(--emerald);
+    stroke-width: 0.7;
+    opacity: 0.12;
+    transition: opacity 380ms ease, stroke-width 380ms ease;
+  }
+  .sb-spoke-bright {
+    opacity: 0.55 !important;
+    stroke-width: 1.1;
+    transition: opacity 200ms ease, stroke-width 200ms ease;
+  }
+
+  /* Comets */
+  .sb-comet {
+    fill: none;
+    stroke: var(--emerald);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-dasharray: 9 91;
+    stroke-dashoffset: 100;
+    opacity: 0;
+    animation: sb-comet-sweep 600ms cubic-bezier(0.32, 0.1, 0.45, 1) forwards;
+    filter: drop-shadow(0 0 3px color-mix(in oklab, var(--emerald) 50%, transparent));
+  }
+  .sb-comet-trail {
+    fill: none;
+    stroke: var(--emerald);
+    stroke-width: 0.9;
+    stroke-linecap: round;
+    stroke-dasharray: 22 78;
+    stroke-dashoffset: 100;
+    opacity: 0;
+    animation: sb-comet-trail 720ms cubic-bezier(0.32, 0.1, 0.45, 1) forwards;
+  }
+  .sb-comet-fan {
+    stroke-width: 1.3;
+    stroke-dasharray: 7 93;
+    animation-duration: 700ms;
+    opacity: 0;
+    filter: drop-shadow(0 0 2.5px color-mix(in oklab, var(--emerald) 40%, transparent));
+  }
+  .sb-comet-trail-fan {
+    stroke-dasharray: 18 82;
+    animation-duration: 820ms;
+  }
+  @keyframes sb-comet-sweep {
+    0%   { stroke-dashoffset: 100; opacity: 0; }
+    12%  { opacity: 1; }
+    85%  { opacity: 0.95; }
+    100% { stroke-dashoffset: 0; opacity: 0; }
+  }
+  @keyframes sb-comet-trail {
+    0%   { stroke-dashoffset: 100; opacity: 0; }
+    18%  { opacity: 0.35; }
+    85%  { opacity: 0.3; }
+    100% { stroke-dashoffset: 0; opacity: 0; }
+  }
+
+  /* Bridge-fan scope tokens */
+  .sb-scope-token {
+    pointer-events: none;
+    opacity: 0;
+    animation: sb-token-fade 800ms ease-out forwards;
+  }
+  .sb-scope-token text {
     font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.22em;
+    font-size: 8.5px;
+    letter-spacing: 0.05em;
+    fill: var(--emerald);
+  }
+  @keyframes sb-token-fade {
+    0%   { opacity: 0; transform: translateY(-2px); }
+    25%  { opacity: 0.95; transform: translateY(0); }
+    75%  { opacity: 0.95; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(2px); }
+  }
+
+  /* ─────────────────── Bridge instrument ─────────────────── */
+  .sb-bridge-label {
+    font-size: 9.5px;
+    letter-spacing: 0.28em;
     fill: var(--slate);
     font-weight: 500;
   }
-  .sb-bridge-head {
-    fill: var(--emerald);
+  .sb-bridge-halo {
+    transition: transform 240ms ease, opacity 240ms ease;
+    transform-origin: center;
+    transform-box: fill-box;
+    opacity: 0.85;
   }
-  .sb-col-rule {
+  .sb-bridge-mid {
+    fill: none;
+    stroke: var(--emerald);
+    stroke-width: 0.6;
+    opacity: 0.45;
+    stroke-dasharray: 1.6 3;
+    animation: sb-mid-spin 32s linear infinite;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  @keyframes sb-mid-spin {
+    to { transform: rotate(360deg); }
+  }
+  .sb-bridge-core {
+    fill: var(--emerald);
+    transform-origin: center;
+    transform-box: fill-box;
+    transition: transform 220ms ease;
+  }
+  .sb-bridge-active .sb-bridge-halo { transform: scale(1.1); opacity: 1; }
+  .sb-bridge-active .sb-bridge-core { transform: scale(1.3); }
+  .sb-bridge-strong .sb-bridge-halo { transform: scale(1.32); opacity: 1; }
+  .sb-bridge-strong .sb-bridge-core { transform: scale(1.65); }
+
+  .sb-eps {
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    fill: var(--slate);
+    font-variant-numeric: tabular-nums;
+  }
+  .sb-eps-pre { fill: var(--slate); }
+  .sb-eps-num { fill: var(--emerald); font-weight: 500; }
+  .sb-eps-cap { fill: var(--slate); opacity: 0.7; font-size: 10px; }
+
+  .sb-instr-rule {
     stroke: var(--hair-2);
     stroke-width: 0.5;
-    stroke-dasharray: 1 4;
+    opacity: 0.7;
   }
 
+  .sb-scope {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    fill: var(--slate);
+    text-transform: uppercase;
+    transition: fill 240ms ease;
+  }
+  .sb-scope-active {
+    fill: var(--emerald);
+    animation: sb-scope-flash 500ms ease;
+  }
+  @keyframes sb-scope-flash {
+    0%   { fill: var(--slate); }
+    20%  { fill: var(--emerald); }
+    100% { fill: var(--slate); }
+  }
+
+  /* ─────────────────── Nodes ─────────────────── */
+  .sb-node {
+    transition: opacity 280ms ease;
+  }
+  .sb-node-ring {
+    fill: none;
+    stroke: var(--emerald);
+    stroke-width: 0.8;
+    opacity: 0;
+    transform-origin: center;
+    transform-box: fill-box;
+    transition: opacity 240ms ease, transform 240ms ease;
+  }
+  .sb-node-active .sb-node-ring {
+    opacity: 0.55;
+    transform: scale(1.15);
+    animation: sb-ring-pulse 700ms ease-out forwards;
+  }
+  @keyframes sb-ring-pulse {
+    0%   { opacity: 0.6; transform: scale(0.9); }
+    100% { opacity: 0; transform: scale(1.6); }
+  }
+
+  /* Consumer glyph — hexagon */
+  .sb-node-consumer .sb-glyph {
+    fill: var(--bg);
+    stroke: var(--ink);
+    stroke-width: 1.1;
+    opacity: 0.7;
+    transition: fill 240ms ease, stroke 240ms ease, opacity 240ms ease;
+  }
+  .sb-node-consumer .sb-glyph-dot {
+    fill: var(--ink);
+    opacity: 0.6;
+    transition: fill 240ms ease;
+  }
+  .sb-node-consumer.sb-node-active .sb-glyph {
+    fill: var(--emerald);
+    stroke: var(--emerald);
+    opacity: 1;
+  }
+  .sb-node-consumer.sb-node-active .sb-glyph-dot {
+    fill: var(--bg);
+    opacity: 1;
+  }
+
+  /* Enterprise glyph — circle with inner ring */
+  .sb-node-enterprise .sb-glyph {
+    fill: var(--bg);
+    stroke: var(--ink);
+    stroke-width: 1.1;
+    opacity: 0.75;
+    transition: fill 240ms ease, stroke 240ms ease, opacity 240ms ease;
+  }
+  .sb-node-enterprise .sb-glyph-inner {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 0.8;
+    opacity: 0.55;
+    transition: stroke 240ms ease, opacity 240ms ease;
+  }
+  .sb-node-enterprise.sb-node-active .sb-glyph {
+    fill: var(--emerald);
+    stroke: var(--emerald);
+    opacity: 1;
+  }
+  .sb-node-enterprise.sb-node-active .sb-glyph-inner {
+    stroke: var(--bg);
+    opacity: 1;
+  }
+
+  /* Node labels */
   .sb-node-label {
     font-family: var(--mono);
-    font-size: 11.5px;
+    font-size: 10.5px;
     letter-spacing: 0.14em;
     fill: var(--ink);
     font-weight: 500;
-    transition: fill 220ms ease;
+    opacity: 0.8;
+    transition: fill 240ms ease, opacity 240ms ease;
   }
   .sb-node-meta {
     font-family: var(--mono);
-    font-size: 9px;
-    letter-spacing: 0.06em;
+    font-size: 8.5px;
+    letter-spacing: 0.04em;
     fill: var(--slate);
-    opacity: 0.7;
+    opacity: 0.55;
   }
-  .sb-node-tick {
-    stroke: var(--hair-2);
-    stroke-width: 0.6;
-  }
-  .sb-node-dot {
-    fill: var(--bg);
-    stroke: var(--hair-2);
-    stroke-width: 1;
-    transition: fill 200ms ease, stroke 200ms ease;
-  }
-  .sb-node-flash .sb-node-label {
+  .sb-node-active .sb-node-label {
     fill: var(--emerald);
-  }
-  .sb-node-flash .sb-node-dot {
-    fill: var(--emerald);
-    stroke: var(--emerald);
-  }
-
-  /* Bridge */
-  .sb-bridge .sb-halo {
-    transform-origin: center;
-    transition: opacity 250ms ease, transform 250ms ease;
-    opacity: 0.8;
-    transform-box: fill-box;
-  }
-  .sb-bridge .sb-halo-2 {
-    transform-origin: center;
-    transform-box: fill-box;
-    transition: opacity 280ms ease, transform 280ms ease;
-    stroke-dasharray: 2 3;
-    animation: sb-spin 60s linear infinite;
-  }
-  .sb-bridge .sb-halo-3 {
-    transform-origin: center;
-    transform-box: fill-box;
-    transition: opacity 200ms ease, transform 200ms ease;
-    stroke-dasharray: 1 2;
-    animation: sb-spin-reverse 40s linear infinite;
-  }
-  .sb-bridge .sb-core {
-    transform-origin: center;
-    transform-box: fill-box;
-    transition: transform 220ms ease, fill 220ms ease;
-  }
-  .sb-bridge.sb-bridge-active .sb-halo {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-  .sb-bridge.sb-bridge-active .sb-core {
-    transform: scale(1.25);
-  }
-  .sb-bridge.sb-bridge-strong .sb-halo {
-    opacity: 1;
-    transform: scale(1.32);
-  }
-  .sb-bridge.sb-bridge-strong .sb-core {
-    transform: scale(1.6);
-  }
-  .sb-bridge.sb-bridge-strong .sb-halo-3 {
     opacity: 1;
   }
-  @keyframes sb-spin {
-    to { transform: rotate(360deg); }
-  }
-  @keyframes sb-spin-reverse {
-    to { transform: rotate(-360deg); }
-  }
 
-  /* Paths */
-  .sb-path {
-    pointer-events: none;
-  }
-  .sb-path-active {
-    animation: sb-path-sweep 1500ms forwards cubic-bezier(0.32, 0.1, 0.45, 1);
-  }
-  .sb-path-bridge.sb-path-active {
-    animation: sb-path-sweep-bridge 1400ms forwards cubic-bezier(0.32, 0.1, 0.45, 1);
-  }
-  @keyframes sb-path-sweep {
-    0%   { stroke-dashoffset: 100; opacity: 0; }
-    8%   { opacity: 1; }
-    55%  { stroke-dashoffset: 0; opacity: 1; }
-    75%  { opacity: 0.9; }
-    100% { stroke-dashoffset: 0; opacity: 0; }
-  }
-  @keyframes sb-path-sweep-bridge {
-    0%   { stroke-dashoffset: 100; opacity: 0; }
-    8%   { opacity: 0.7; }
-    55%  { stroke-dashoffset: 0; opacity: 0.7; }
-    75%  { opacity: 0.6; }
-    100% { stroke-dashoffset: 0; opacity: 0; }
-  }
-
-  .sb-rail {
-    stroke: var(--hair);
-    stroke-width: 1;
-  }
-  .sb-rail-l, .sb-rail-r {
-    font-family: var(--mono);
-    font-size: 9.5px;
-    letter-spacing: 0.18em;
-    fill: var(--slate);
-  }
-
-  /* Feed */
+  /* ─────────────────── Feed ─────────────────── */
   .sb-feed {
     border-top: 1px solid var(--hair);
-    background: color-mix(in oklab, var(--bg-soft) 60%, transparent);
+    background: color-mix(in oklab, var(--bg-soft) 56%, transparent);
     padding: 0;
+    position: relative;
+  }
+  .sb-feed::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 28px;
+    background: linear-gradient(to bottom,
+      transparent,
+      color-mix(in oklab, var(--bg-soft) 56%, transparent));
+    pointer-events: none;
   }
   .sb-feed-head {
     display: grid;
-    grid-template-columns: 110px 1fr 1fr 70px;
+    grid-template-columns: 110px 1fr 1fr 80px;
     gap: 14px;
     padding: 12px 20px;
     font-size: 9.5px;
@@ -619,12 +1014,12 @@ const bridge = { x: 350, y: 270 };
     list-style: none;
     margin: 0;
     padding: 0;
-    height: 192px;       /* fixed — kills page jitter from row overflow */
-    overflow: hidden;    /* clip the briefly-visible 7th row during fade */
+    height: 192px;
+    overflow: hidden;
   }
   .sb-row {
     display: grid;
-    grid-template-columns: 110px 1fr 1fr 70px;
+    grid-template-columns: 110px 1fr 1fr 80px;
     gap: 14px;
     padding: 9px 20px;
     border-bottom: 1px solid color-mix(in oklab, var(--hair) 60%, transparent);
@@ -634,14 +1029,8 @@ const bridge = { x: 350, y: 270 };
     transition: transform 320ms ease, opacity 320ms ease;
   }
   .sb-row:last-child { border-bottom: none; }
-  .sb-row-in {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  .sb-row-out {
-    opacity: 0;
-    transform: translateY(6px);
-  }
+  .sb-row-in { transform: translateY(0); opacity: 1; }
+  .sb-row-out { opacity: 0; transform: translateY(6px); }
   .sb-ts {
     font-size: 10.5px;
     color: var(--slate);
@@ -659,9 +1048,8 @@ const bridge = { x: 350, y: 270 };
   .sb-arrow {
     color: var(--emerald);
     font-weight: 500;
-    margin: 0 1px;
   }
-  .sb-scope {
+  .sb-scope-col {
     font-size: 10.5px;
     color: var(--ink);
     letter-spacing: 0.04em;
@@ -669,41 +1057,39 @@ const bridge = { x: 350, y: 270 };
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .sb-scope-dim {
-    color: var(--slate);
-  }
+  .sb-scope-dim { color: var(--slate); }
   .sb-lat {
     font-size: 10.5px;
-    color: var(--slate);
     text-align: right;
     font-variant-numeric: tabular-nums;
   }
+  .sb-lat-fast { color: var(--emerald); }
+  .sb-lat-normal { color: var(--slate); }
+  .sb-lat-slow { color: var(--rose-fg); }
   .sb-lat-unit {
-    color: var(--slate);
     opacity: 0.6;
     margin-left: 1px;
     font-size: 9px;
   }
   .sb-row-bridge .sb-route,
-  .sb-row-bridge .sb-scope {
+  .sb-row-bridge .sb-scope-col {
     color: var(--emerald-deep, #2f7048);
   }
   .sb-row-bridge .sb-arrow {
     color: var(--emerald);
   }
 
-  @media (max-width: 720px) {
-    .sb-head { padding: 12px 14px; gap: 10px; flex-wrap: wrap; }
+  /* ─────────────────── Responsive ─────────────────── */
+  @media (max-width: 760px) {
+    .sb-head { padding: 11px 14px; gap: 10px; flex-wrap: wrap; }
     .sb-head-l, .sb-head-r { gap: 12px; }
     .sb-id-sub { display: none; }
+    .sb-stats { grid-template-columns: 1fr 1fr; }
+    .sb-stat:nth-child(3) { grid-column: 1 / -1; border-top: 1px solid color-mix(in oklab, var(--hair) 70%, transparent); }
     .sb-feed-head, .sb-row {
       grid-template-columns: 78px 1fr 60px;
       padding: 9px 14px;
       gap: 10px;
-    }
-    .sb-feed-head .sb-feed-scope-col,
-    .sb-row .sb-scope {
-      display: none;
     }
     .sb-feed-head > :nth-child(3),
     .sb-row > :nth-child(3) {
@@ -712,10 +1098,12 @@ const bridge = { x: 350, y: 270 };
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .sb-pulse, .sb-halo-2, .sb-halo-3 { animation: none; }
-    .sb-path-active, .sb-path-bridge.sb-path-active {
+    .sb-pulse, .sb-bridge-mid, .sb-canvas { animation: none; }
+    .sb-comet, .sb-comet-trail, .sb-comet-fan, .sb-comet-trail-fan {
       animation-duration: 0.01ms;
       animation-iteration-count: 1;
     }
+    .sb-sonar-firing, .sb-sonar-firing-strong { animation: none; }
+    .sb-scope-token { animation: none; opacity: 0.8; }
   }
 </style>
