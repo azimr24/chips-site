@@ -1,269 +1,497 @@
 ---
 import Base from '../layouts/Base.astro';
-import Hero from '../components/Hero.astro';
-import Button from '../components/Button.astro';
-import LogoStrip from '../components/LogoStrip.astro';
-import PillarCard from '../components/PillarCard.astro';
-import KPICard from '../components/KPICard.astro';
-import Callout from '../components/Callout.astro';
-import MonoLabel from '../components/MonoLabel.astro';
+import Switchboard from '../components/Switchboard.astro';
+
+const CAL = 'https://cal.com/eugene-ye';
 ---
 
 <Base
-  title="Chips — Invisible commerce infrastructure for the agentic web"
-  description="A2A-native enterprise agents, a consent-mediated cross-enterprise context bridge, and privacy-preserving network learning. The consumer never signs up. The agent ships in 4–8 hours."
+  title="Chips — Cookies for agents."
+  description="A protocol the consumer never sees. Invisible commerce infrastructure for the agentic web."
 >
-  <Hero eyebrow="THE BRIDGE IS THE MOAT PEOPLE SEE · NETWORK LEARNING IS THE MOAT THAT COMPOUNDS">
-    <Fragment slot="headline">
-      <em>Invisible</em> commerce<br />
-      infrastructure for<br />
-      the <em>agentic web<span class="dot">.</span></em>
-    </Fragment>
-    <Fragment slot="sub">
-      <p>
-        The consumer opens her agent of choice — ChatGPT, Claude, Apple Intelligence, Perplexity — asks to buy
-        something, and through standard A2A conversation talks to <em>Chips-hosted enterprise agents</em> that
-        recognize her, personalize for her, and bridge context across the network.
-      </p>
-      <p>She never signs up for Chips. She never sees a Chips screen.</p>
-    </Fragment>
-    <Fragment slot="ctas">
-      <Button href="/how-it-works" variant="primary">How it works</Button>
-      <Button href="/pricing" variant="outline">See pricing</Button>
-      <Button href="mailto:hello@chips.dev" variant="ghost">hello@chips.dev</Button>
-    </Fragment>
-    <Fragment slot="strip">
-      <LogoStrip />
-    </Fragment>
-  </Hero>
-
-  <section class="pillars">
-    <div class="shell">
-      <div class="section-head">
-        <MonoLabel tone="emerald">01 · THE PRODUCT SURFACE</MonoLabel>
-        <span class="section-rule"></span>
-        <MonoLabel tone="slate">THREE LAYERS · ONE NETWORK</MonoLabel>
-      </div>
-
-      <h2 class="section-title">
-        A hosted A2A runtime, a consent-mediated <em>bridge</em>,
-        and a privacy-preserving learning layer that compounds.
-      </h2>
-
-      <div class="pillar-grid">
-        <PillarCard index="I" label="RUNTIME" heading="Hosted A2A enterprise agent runtime">
-          Multi-tenant. Eleven JSON-RPC methods over HTTP + SSE. Full task lifecycle. <em>BYO LLM</em> or
-          Chips Commerce Agent baseline. Your agent ships in <em>4–8 hours</em>.
-        </PillarCard>
-
-        <PillarCard index="II" label="BRIDGE" heading="Cross-enterprise context bridge">
-          Consent-mediated context queries across the network. Conversational by default, structured for
-          partners. Scope vocabulary governed by the <em>Linux Foundation A2A WG</em>. Every grant audit-logged.
-        </PillarCard>
-
-        <PillarCard index="III" label="NETWORK INTELLIGENCE" heading="Level B priors, under differential privacy">
-          Five learning loops at distinct timescales. <em>Level A</em> stays at your CDP. <em>Level B</em>
-          aggregates across the network with calibrated DP noise. Day-1 cold-start operates above what a solo
-          agent achieves at month 6.
-        </PillarCard>
-      </div>
-    </div>
-  </section>
-
-  <section class="metrics">
-    <div class="shell">
-      <div class="section-head">
-        <MonoLabel tone="emerald">02 · WHAT YOU MEASURE</MonoLabel>
-        <span class="section-rule"></span>
-        <MonoLabel tone="slate">EARLY-COHORT TYPICALS</MonoLabel>
-      </div>
-
-      <h2 class="section-title">
-        Sharper agents. <em>Higher conversion.</em> Lower returns.
-      </h2>
-
-      <div class="kpi-grid">
-        <KPICard label="AGENT SHIPS IN" value="4–8" suffix="HOURS" detail="From signed contract to Agent Card published at agents.chips.dev/<you>" />
-        <KPICard label="CONVERSION LIFT" value="+16" suffix="PP" detail="38% vs 22% baseline · Phase 1 cohort · outdoor &amp; athletic" />
-        <KPICard label="BRIDGE CALLS" value="30" suffix="% OF HANDSHAKES" detail="Typical mid-market retailer · scope-stratified by category" />
-        <KPICard label="LEVEL B PRIORS" value="N=42k" suffix="ε=0.5" detail="Population-level patterns · DP-aggregated · audit pipeline external-review-ready" />
-      </div>
-    </div>
-  </section>
-
-  <section class="thesis">
-    <div class="shell">
-      <div class="section-head">
-        <MonoLabel tone="emerald">03 · THE THESIS</MonoLabel>
-        <span class="section-rule"></span>
-      </div>
-
-      <div class="thesis-grid">
-        <div class="thesis-text">
-          <h2 class="section-title">
-            The right unit of identity for AI commerce<br />
-            is not the <em>session</em>, the <em>device</em>, or the <em>IP</em>.
-          </h2>
-          <p class="thesis-body">
-            It's the durable link between a person, their agent, and the brands they've already said yes to.
-          </p>
-          <p class="thesis-body">
-            Browser cookies were built for a web of pages. The agentic web is a network of conversations.
-            <em>Chips is the protocol that lets those conversations carry context — with consent — across
-            every brand the consumer has touched.</em>
-          </p>
+  <!-- ACT I — Hero + Switchboard -->
+  <section class="hero">
+    <div class="shell hero-grid">
+      <div class="hero-text">
+        <div class="hero-eyebrow">
+          <span class="line-mark" aria-hidden="true"></span>
+          <span class="eyebrow mono">INVISIBLE COMMERCE INFRASTRUCTURE · A2A · 2026</span>
         </div>
 
-        <Callout variant="quote">
-          <p>
-            Build the network we're all going to compete inside, and get the
-            <strong>first-mover advantage</strong> on shaping the conversation patterns
-            that become industry baselines.
-          </p>
-          <p class="attr"><span class="mono">— FIRST-COHORT PITCH · 06.1 §10</span></p>
-        </Callout>
+        <h1 class="headline">
+          Cookies<br />for <em>agents</em><span class="dot">.</span>
+        </h1>
+
+        <p class="sub">
+          A protocol the consumer never sees.<br />
+          Watching it run<span class="watching-arrow" aria-hidden="true"> →</span>
+        </p>
+
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href={CAL} target="_blank" rel="noopener">
+            <span>Schedule a call</span>
+            <span class="btn-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="btn-ghost" href="mailto:hello@chips.dev">hello@chips.dev</a>
+        </div>
+
+        <div class="hero-trace mono" aria-hidden="true">
+          <span class="trace-mark">▍</span>
+          <span class="trace-text">trace · ${'{'}consumer.jwt → bridge.grant → enterprise.task{'}'} · 0.00µs idle</span>
+        </div>
+      </div>
+
+      <aside class="hero-switchboard" aria-label="Live A2A traffic between consumer agents and Chips-hosted enterprise agents">
+        <Switchboard />
+      </aside>
+    </div>
+  </section>
+
+  <!-- ACT II — Manifesto -->
+  <section class="manifesto">
+    <div class="shell manifesto-inner">
+      <span class="manifesto-mark mono">§ MANIFESTO</span>
+
+      <p class="stanza">
+        The page web was wired for surveillance.<br />
+        The agentic web is wired for <em>context</em>.
+      </p>
+
+      <p class="stanza">
+        We operate the layer between every agent<br />
+        and every brand the consumer has touched.
+      </p>
+
+      <p class="stanza">
+        The consumer never signs up.<br />
+        Never sees a screen.<br />
+        That&rsquo;s the point.
+      </p>
+
+      <div class="manifesto-corner mono" aria-hidden="true">
+        <span>00 · FIRST PRINCIPLES</span>
+        <span>chips.dev / 2026</span>
       </div>
     </div>
   </section>
 
-  <section class="cta">
-    <div class="shell cta-inner">
-      <h2 class="cta-headline">
-        <em>Ship</em> your agent. Join the network. Inherit the priors.
-      </h2>
-      <p class="cta-sub">
-        First cohort is closing. <em>Outdoor &amp; athletic apparel · beauty · home goods.</em>
-      </p>
-      <div class="cta-ctas">
-        <Button href="mailto:hello@chips.dev?subject=Chips%20cohort%20interest" variant="primary">
-          Apply to the cohort
-        </Button>
-        <Button href="/pricing" variant="outline">See pricing</Button>
+  <!-- ACT III — Closer -->
+  <section class="closer">
+    <div class="shell closer-inner">
+      <div class="closer-meta mono">
+        <span class="closer-dot"></span>
+        <span>ENROLLING THE LAUNCH COHORT</span>
+        <span class="closer-meta-sep">·</span>
+        <span>OUTDOOR · BEAUTY · HOME</span>
       </div>
+
+      <h2 class="closer-headline">
+        Let&rsquo;s build<br />
+        the <em>agentic</em> web<span class="dot">.</span>
+      </h2>
+
+      <p class="closer-sub">Founders take every call.</p>
+
+      <div class="closer-ctas">
+        <a class="btn btn-primary btn-light" href={CAL} target="_blank" rel="noopener">
+          <span>Schedule a call</span>
+          <span class="btn-arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="closer-mail mono" href="mailto:hello@chips.dev">hello@chips.dev</a>
+      </div>
+
+      <div class="closer-grid" aria-hidden="true"></div>
     </div>
   </section>
 </Base>
 
+<style is:global>
+  /* Stagger reveal on hero — single page-load choreography */
+  .hero-eyebrow, .headline, .sub, .hero-ctas, .hero-trace, .hero-switchboard {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: hero-rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  }
+  .hero-eyebrow    { animation-delay: 80ms; }
+  .headline        { animation-delay: 180ms; }
+  .sub             { animation-delay: 360ms; }
+  .hero-ctas       { animation-delay: 500ms; }
+  .hero-trace      { animation-delay: 700ms; }
+  .hero-switchboard{ animation-delay: 340ms; }
+  @keyframes hero-rise {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-eyebrow, .headline, .sub, .hero-ctas, .hero-trace, .hero-switchboard {
+      opacity: 1; transform: none; animation: none;
+    }
+  }
+</style>
+
 <style>
-  .section-title {
+  /* ──────────────── HERO ──────────────── */
+  .hero {
+    padding: 64px 0 96px;
+    border-top: none;
+    overflow: hidden;
+    position: relative;
+  }
+  .hero::before {
+    /* faint margin marks evoking a typeset proof */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 8% 24%, color-mix(in oklab, var(--emerald) 6%, transparent) 0%, transparent 35%),
+      radial-gradient(circle at 92% 88%, color-mix(in oklab, var(--ink) 5%, transparent) 0%, transparent 35%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 72px;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    min-height: 72vh;
+  }
+
+  /* Hero — text column */
+  .hero-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .line-mark {
+    display: inline-block;
+    width: 36px;
+    height: 1px;
+    background: var(--emerald);
+  }
+  .eyebrow {
+    font-size: 10.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--slate);
+    font-weight: 500;
+  }
+  .headline {
     font-family: var(--serif);
-    font-size: clamp(1.9rem, 2.8vw + 0.5rem, 2.75rem);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
+    font-size: clamp(3.75rem, 8vw + 0.5rem, 7.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.034em;
     font-weight: 400;
     color: var(--ink);
-    margin: 0 0 56px;
-    max-width: 24ch;
+    margin: 0 0 32px;
   }
-  .section-title :global(em) {
+  .headline em {
     font-style: italic;
     color: var(--emerald);
   }
-
-  .pillars {
-    background: color-mix(in oklab, var(--bg-soft) 70%, transparent);
+  .headline .dot {
+    color: var(--emerald);
+    font-style: normal;
   }
-  .pillar-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border: 1px solid var(--hair);
-    background: var(--bg);
-  }
-
-  .metrics .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    border: 1px solid var(--hair);
-  }
-
-  .thesis-grid {
-    display: grid;
-    grid-template-columns: 1.6fr 1fr;
-    gap: 64px;
-    align-items: start;
-  }
-  .thesis-body {
+  .sub {
     font-family: var(--serif);
-    font-size: 18px;
-    line-height: 1.55;
+    font-size: clamp(1.05rem, 0.5vw + 1rem, 1.25rem);
+    line-height: 1.45;
     color: var(--slate);
-    max-width: 56ch;
+    margin: 0 0 36px;
+    max-width: 38ch;
   }
-  .thesis-body :global(em) {
-    font-style: italic;
+  .watching-arrow {
     color: var(--emerald);
+    font-family: var(--mono);
+    margin-left: 2px;
   }
-  .attr {
-    font-size: 12px !important;
-    color: var(--slate);
-    margin-top: 14px !important;
-    font-style: normal !important;
+  .hero-ctas {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    margin-bottom: 44px;
   }
 
-  .cta {
+  /* Buttons (local to page; we replaced the old generic Button) */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 14px 18px 13px;
+    border-radius: 3px;
+    text-decoration: none;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--bg);
+    transition: background 200ms ease, color 200ms ease, transform 200ms ease, border-color 200ms ease;
+    cursor: pointer;
+    border-bottom: none;
+    line-height: 1;
+  }
+  .btn-primary:hover {
     background: var(--ink-deep);
     color: var(--bg);
-    border-top: 1px solid var(--ink-deep);
   }
-  .cta-inner {
-    padding: 96px 0;
-    text-align: center;
+  .btn-arrow {
+    font-family: var(--mono);
+    transition: transform 200ms ease;
   }
-  .cta-headline {
-    font-family: var(--serif);
-    font-size: clamp(2rem, 4vw + 0.5rem, 3.25rem);
-    line-height: 1.05;
-    letter-spacing: -0.022em;
-    font-weight: 400;
-    color: var(--bg);
-    margin: 0 auto 24px;
-    max-width: 22ch;
+  .btn-primary:hover .btn-arrow {
+    transform: translateX(4px);
   }
-  .cta-headline :global(em) {
-    font-style: italic;
+  .btn-ghost {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--slate);
+    text-decoration: none;
+    border-bottom: 1px solid var(--hair-2);
+    padding: 4px 0 6px;
+    transition: color 200ms ease, border-color 200ms ease;
+  }
+  .btn-ghost:hover {
     color: var(--emerald);
+    border-bottom-color: var(--emerald);
   }
-  .cta-sub {
-    font-family: var(--serif);
-    font-size: var(--fs-lede);
-    color: color-mix(in oklab, var(--bg) 85%, var(--ink));
-    margin: 0 auto 36px;
-    max-width: 48ch;
+  .btn-light {
+    border: 1px solid var(--bg);
+    background: var(--bg);
+    color: var(--ink);
   }
-  .cta-sub em {
-    font-style: italic;
-    color: var(--emerald-soft);
+  .btn-light:hover {
+    background: transparent;
+    color: var(--bg);
+    border-color: var(--bg);
   }
-  .cta-ctas {
+  .btn-light:hover .btn-arrow { transform: translateX(4px); }
+
+  .hero-trace {
     display: flex;
-    gap: 14px;
-    justify-content: center;
-    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--slate);
+    opacity: 0.7;
+    padding-top: 20px;
+    border-top: 1px dashed var(--hair-2);
+    max-width: 56ch;
   }
-  .cta .btn-outline {
-    color: var(--bg);
-    border-color: color-mix(in oklab, var(--bg) 30%, transparent);
-  }
-  .cta .btn-outline:hover {
-    border-color: var(--emerald);
+  .trace-mark {
     color: var(--emerald);
+    font-family: var(--mono);
+    animation: trace-blink 1.4s steps(2, end) infinite;
+  }
+  @keyframes trace-blink {
+    50% { opacity: 0.15; }
+  }
+  .trace-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  @media (max-width: 900px) {
-    .pillar-grid {
-      grid-template-columns: 1fr;
-    }
-    .metrics .kpi-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-    .thesis-grid {
-      grid-template-columns: 1fr;
-      gap: 40px;
+  /* Hero — switchboard column */
+  .hero-switchboard {
+    width: 100%;
+    align-self: center;
+  }
+
+  /* ──────────────── MANIFESTO ──────────────── */
+  .manifesto {
+    padding: 144px 0 156px;
+    border-top: 1px solid var(--hair);
+    background: var(--bg);
+    position: relative;
+  }
+  .manifesto-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+  }
+  .manifesto-mark {
+    display: inline-block;
+    font-size: 10.5px;
+    letter-spacing: 0.28em;
+    color: var(--slate);
+    margin-bottom: 56px;
+    padding: 6px 12px;
+    border: 1px solid var(--hair);
+    border-radius: 2px;
+  }
+  .stanza {
+    font-family: var(--serif);
+    font-size: clamp(1.4rem, 1.5vw + 0.8rem, 1.85rem);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0 0 36px;
+  }
+  .stanza:last-of-type { margin-bottom: 0; }
+  .stanza em {
+    font-style: italic;
+    color: var(--emerald);
+  }
+  .manifesto-corner {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    color: var(--slate);
+    margin-top: 80px;
+    padding-top: 22px;
+    border-top: 1px dashed var(--hair-2);
+    text-transform: uppercase;
+  }
+
+  /* ──────────────── CLOSER ──────────────── */
+  .closer {
+    padding: 128px 0 96px;
+    background:
+      radial-gradient(ellipse at top, color-mix(in oklab, var(--emerald) 14%, var(--ink-deep)) 0%, var(--ink-deep) 60%);
+    color: var(--bg);
+    border-top: 1px solid var(--ink-deep);
+    position: relative;
+    overflow: hidden;
+  }
+  .closer-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--bg) 5%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--bg) 5%, transparent) 1px, transparent 1px);
+    background-size: 56px 56px;
+    background-position: -1px -1px;
+    pointer-events: none;
+    opacity: 0.7;
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+  }
+  .closer-inner {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+  }
+  .closer-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    color: color-mix(in oklab, var(--bg) 80%, transparent);
+    text-transform: uppercase;
+  }
+  .closer-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--emerald);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--emerald) 22%, transparent);
+    animation: nav-pulse 1.8s ease-in-out infinite;
+  }
+  .closer-meta-sep {
+    opacity: 0.4;
+  }
+  .closer-headline {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 6vw + 0.5rem, 5.5rem);
+    line-height: 0.96;
+    letter-spacing: -0.028em;
+    font-weight: 400;
+    color: var(--bg);
+    margin: 0;
+    max-width: 18ch;
+  }
+  .closer-headline em {
+    font-style: italic;
+    color: color-mix(in oklab, var(--emerald) 90%, var(--bg));
+  }
+  .closer-headline .dot {
+    color: var(--emerald);
+    font-style: normal;
+  }
+  .closer-sub {
+    font-family: var(--serif);
+    font-size: clamp(1.1rem, 0.6vw + 1rem, 1.3rem);
+    color: color-mix(in oklab, var(--bg) 78%, transparent);
+    margin: 0;
+    font-style: italic;
+  }
+  .closer-ctas {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .closer-mail {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--bg) 70%, transparent);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in oklab, var(--bg) 25%, transparent);
+    padding: 4px 0 6px;
+    transition: color 200ms ease, border-color 200ms ease;
+  }
+  .closer-mail:hover {
+    color: var(--emerald);
+    border-bottom-color: var(--emerald);
+  }
+
+  /* ──────────────── RESPONSIVE ──────────────── */
+  @media (max-width: 1080px) {
+    .hero-grid {
+      gap: 48px;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
     }
   }
-  @media (max-width: 560px) {
-    .metrics .kpi-grid {
+  @media (max-width: 900px) {
+    .hero { padding: 40px 0 80px; }
+    .hero-grid {
       grid-template-columns: 1fr;
+      gap: 48px;
+      min-height: 0;
     }
+    .hero-text { order: 1; }
+    .hero-switchboard { order: 2; }
+    .manifesto { padding: 96px 0 100px; }
+    .closer { padding: 96px 0 80px; }
+  }
+  @media (max-width: 560px) {
+    .hero { padding: 28px 0 64px; }
+    .headline { font-size: clamp(3rem, 14vw, 4.5rem); }
+    .hero-trace { display: none; }
+    .manifesto-corner {
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+    }
+    .closer-meta {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px 10px;
+    }
+    .closer-meta-sep { display: none; }
   }
 </style>

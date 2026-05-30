@@ -1,171 +1,99 @@
 ---
 import BrandWordmark from './BrandWordmark.astro';
 
-interface Props {
-  pageLabel?: string;
-}
-
-const { pageLabel } = Astro.props;
-const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
-
-const links = [
-  { href: '/how-it-works', label: 'How it works' },
-  { href: '/network-learning', label: 'Network learning' },
-  { href: '/for-enterprises', label: 'For enterprises' },
-  { href: '/for-platforms', label: 'For platforms' },
-  { href: '/pricing', label: 'Pricing' },
-  { href: '/manifesto', label: 'Manifesto' },
-];
-
-const isActive = (href: string) =>
-  href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(href + '/');
+const CAL_LINK = 'https://cal.com/eugene-ye';
 ---
 
 <header class="topbar">
   <div class="shell topbar-inner">
-    <div class="left">
-      <BrandWordmark size="md" href="/" />
-      {pageLabel && <span class="page-label">{pageLabel}</span>}
-    </div>
+    <BrandWordmark size="md" href="/" />
 
-    <nav class="nav" aria-label="Primary">
-      {links.map((link) => (
-        <a href={link.href} class:list={['nav-link', { active: isActive(link.href) }]}>
-          {link.label}
-        </a>
-      ))}
-    </nav>
-
-    <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-nav">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-  </div>
-
-  <nav id="mobile-nav" class="mobile-nav" aria-label="Mobile">
-    {links.map((link) => (
-      <a href={link.href} class:list={['mobile-link', { active: isActive(link.href) }]}>
-        {link.label}
+    <div class="topbar-right">
+      <span class="status mono" aria-hidden="true">
+        <span class="status-dot"></span>NETWORK · LIVE
+      </span>
+      <a class="cta mono" href={CAL_LINK} target="_blank" rel="noopener">
+        <span>Schedule a call</span>
+        <span class="cta-arrow" aria-hidden="true">→</span>
       </a>
-    ))}
-  </nav>
+    </div>
+  </div>
 </header>
-
-<script is:inline>
-  (() => {
-    const toggle = document.querySelector('.menu-toggle');
-    const mobileNav = document.getElementById('mobile-nav');
-    if (!toggle || !mobileNav) return;
-    toggle.addEventListener('click', () => {
-      const open = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!open));
-      mobileNav.classList.toggle('open', !open);
-    });
-  })();
-</script>
 
 <style>
   .topbar {
-    border-bottom: 1px solid var(--hair);
-    background: var(--bg);
     position: sticky;
     top: 0;
-    z-index: 10;
-    backdrop-filter: blur(8px);
+    z-index: 20;
     background: color-mix(in oklab, var(--bg) 92%, transparent);
+    backdrop-filter: blur(10px) saturate(108%);
+    -webkit-backdrop-filter: blur(10px) saturate(108%);
+    border-bottom: 1px solid var(--hair);
   }
   .topbar-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 22px 0 18px;
-    gap: 28px;
+    padding: 18px 0 16px;
+    gap: 24px;
   }
-  .left {
-    display: flex;
-    align-items: baseline;
-    gap: 18px;
-  }
-  .page-label {
-    font-family: var(--mono);
-    font-size: 10.5px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--slate);
-    padding-left: 14px;
-    border-left: 1px solid var(--hair-2);
-  }
-  .nav {
+  .topbar-right {
     display: flex;
     align-items: center;
-    gap: 26px;
+    gap: 20px;
   }
-  .nav-link {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    letter-spacing: 0.22em;
     color: var(--slate);
-    text-decoration: none;
-    padding: 4px 0;
-    border-bottom: 1px solid transparent;
-    transition: border-color 150ms ease, color 150ms ease;
+    text-transform: uppercase;
   }
-  .nav-link:hover {
-    color: var(--ink);
-    border-bottom-color: transparent;
+  .status-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--emerald);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--emerald) 18%, transparent);
+    animation: nav-pulse 1.8s ease-in-out infinite;
   }
-  .nav-link.active {
-    color: var(--ink);
-    border-bottom-color: var(--emerald);
+  @keyframes nav-pulse {
+    0%, 100% { opacity: 0.5; transform: scale(0.85); }
+    50%      { opacity: 1; transform: scale(1); }
   }
-
-  .menu-toggle {
-    display: none;
-    flex-direction: column;
-    gap: 4px;
-    background: transparent;
-    border: 1px solid var(--hair-2);
-    border-radius: var(--radius-sm);
-    padding: 10px 9px;
-    cursor: pointer;
-  }
-  .menu-toggle span {
-    width: 18px;
-    height: 1.5px;
-    background: var(--ink);
-    display: block;
-  }
-
-  .mobile-nav {
-    display: none;
-    flex-direction: column;
-    gap: 0;
-    border-top: 1px solid var(--hair);
-    padding: 16px 0 24px;
-  }
-  .mobile-nav.open {
-    display: flex;
-  }
-  .mobile-link {
-    font-family: var(--mono);
-    font-size: 12px;
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--slate);
-    text-decoration: none;
-    padding: 14px var(--shell-pad-mobile);
-    border-bottom: 1px solid var(--hair);
-  }
-  .mobile-link.active {
     color: var(--ink);
-    background: var(--bg-soft);
+    text-decoration: none;
+    padding: 9px 14px 8px;
+    border: 1px solid var(--ink);
+    border-radius: 3px;
+    background: var(--ink);
+    color: var(--bg);
+    transition: background 200ms ease, transform 200ms ease, border-color 200ms ease;
   }
-  .mobile-link:last-child { border-bottom: none; }
+  .cta:hover {
+    background: transparent;
+    color: var(--ink);
+  }
+  .cta:hover .cta-arrow {
+    transform: translateX(3px);
+  }
+  .cta-arrow {
+    transition: transform 200ms ease;
+    font-family: var(--mono);
+  }
 
-  @media (max-width: 960px) {
-    .nav { display: none; }
-    .menu-toggle { display: flex; }
+  @media (max-width: 640px) {
+    .status { display: none; }
+    .cta { padding: 8px 11px 7px; font-size: 10.5px; letter-spacing: 0.12em; }
+    .topbar-inner { padding: 14px 0 13px; }
   }
 </style>

@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 import sharp from 'sharp';
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -23,7 +23,6 @@ const faviconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
         letter-spacing="-1">C</text>
   <circle cx="49" cy="46" r="3.4" fill="${EMERALD}"/>
 </svg>`;
-
 writeFileSync(resolve(PUBLIC, 'favicon.svg'), faviconSvg);
 console.log('✓ favicon.svg');
 
@@ -31,69 +30,73 @@ console.log('✓ favicon.svg');
 const ogSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="${BG}"/>
 
-  <!-- top hairline + kicker -->
-  <line x1="80" y1="84" x2="1120" y2="84" stroke="${HAIR}" stroke-width="1"/>
-  <text x="80" y="68"
+  <!-- decorative dot grid (very subtle) -->
+  <defs>
+    <pattern id="g" width="32" height="32" patternUnits="userSpaceOnUse">
+      <circle cx="0" cy="0" r="0.8" fill="${HAIR}" />
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g)" opacity="0.65" />
+
+  <!-- top strip -->
+  <line x1="80" y1="92" x2="1120" y2="92" stroke="${HAIR}" stroke-width="1"/>
+
+  <line x1="80" y1="66" x2="118" y2="66" stroke="${EMERALD}" stroke-width="1.5"/>
+  <text x="128" y="71"
         font-family="'JetBrains Mono', 'Berkeley Mono', monospace"
-        font-size="14" letter-spacing="3" fill="${SLATE}">
-    CHIPS · V0 · 2026 · INVISIBLE COMMERCE INFRASTRUCTURE
+        font-size="13" letter-spacing="3" fill="${SLATE}" font-weight="500">
+    INVISIBLE COMMERCE INFRASTRUCTURE · A2A · 2026
   </text>
 
-  <!-- live-network pill -->
-  <g transform="translate(932,52)">
-    <rect width="188" height="32" rx="3" fill="#dce9df" stroke="${EMERALD}" stroke-width="1"/>
-    <circle cx="14" cy="16" r="3.5" fill="${EMERALD}"/>
-    <text x="26" y="21"
+  <g transform="translate(984,52)">
+    <rect width="136" height="28" rx="3" fill="#dce9df" stroke="${EMERALD}" stroke-width="1"/>
+    <circle cx="14" cy="14" r="3.5" fill="${EMERALD}"/>
+    <text x="26" y="19"
           font-family="'JetBrains Mono', monospace"
-          font-size="11" letter-spacing="1.5" fill="${EMERALD}">
+          font-size="11" letter-spacing="2" fill="${EMERALD}" font-weight="500">
       NETWORK · LIVE
     </text>
   </g>
 
-  <!-- big serif headline -->
-  <text x="80" y="240"
+  <!-- big serif headline · two lines -->
+  <text x="80" y="290"
         font-family="'EB Garamond', 'Plantin MT Pro', Georgia, serif"
-        font-style="italic" font-weight="500" font-size="92"
-        fill="${EMERALD}" letter-spacing="-2">
-    Invisible
+        font-weight="400" font-size="180" fill="${INK}" letter-spacing="-6">
+    Cookies
   </text>
-  <text x="80" y="240"
+  <text x="80" y="440"
         font-family="'EB Garamond', Georgia, serif"
-        font-weight="400" font-size="92" fill="${INK}" letter-spacing="-2">
-    <tspan dx="380">commerce</tspan>
-  </text>
-  <text x="80" y="335"
-        font-family="'EB Garamond', Georgia, serif"
-        font-weight="400" font-size="92" fill="${INK}" letter-spacing="-2">
-    infrastructure for the
-  </text>
-  <text x="80" y="430"
-        font-family="'EB Garamond', Georgia, serif"
-        font-style="italic" font-weight="500" font-size="92"
-        fill="${EMERALD}" letter-spacing="-2">
-    agentic web<tspan fill="${EMERALD}" font-style="normal">.</tspan>
+        font-weight="400" font-size="180" fill="${INK}" letter-spacing="-6">
+    for <tspan font-style="italic" fill="${EMERALD}">agents</tspan><tspan fill="${EMERALD}" font-style="normal">.</tspan>
   </text>
 
-  <!-- bottom hairline + wordmark + tag -->
-  <line x1="80" y1="510" x2="1120" y2="510" stroke="${HAIR}" stroke-width="1"/>
-
-  <text x="80" y="572"
+  <!-- subtitle -->
+  <text x="80" y="500"
         font-family="'EB Garamond', Georgia, serif"
-        font-style="italic" font-weight="500" font-size="44" fill="${INK}"
+        font-style="italic" font-size="26" fill="${SLATE}">
+    A protocol the consumer never sees.
+  </text>
+
+  <!-- bottom strip -->
+  <line x1="80" y1="540" x2="1120" y2="540" stroke="${HAIR}" stroke-width="1"/>
+
+  <text x="80" y="588"
+        font-family="'EB Garamond', Georgia, serif"
+        font-style="italic" font-weight="500" font-size="38" fill="${INK}"
         letter-spacing="-0.5">
     Chips<tspan fill="${EMERALD}" font-style="normal">.</tspan>
   </text>
 
-  <text x="1120" y="558"
+  <text x="1120" y="576"
         font-family="'JetBrains Mono', monospace"
-        font-size="13" letter-spacing="2.5" fill="${SLATE}"
+        font-size="12" letter-spacing="2.5" fill="${SLATE}"
         text-anchor="end">
-    A2A-NATIVE · LINUX FOUNDATION WG
+    SCHEDULE A CALL · CAL.COM/EUGENE-YE
   </text>
-  <text x="1120" y="582"
+  <text x="1120" y="598"
         font-family="'JetBrains Mono', monospace"
-        font-size="13" letter-spacing="2.5" fill="${EMERALD}"
-        text-anchor="end">
+        font-size="12" letter-spacing="2.5" fill="${EMERALD}"
+        text-anchor="end" font-weight="500">
     CHIPS.DEV
   </text>
 </svg>`;

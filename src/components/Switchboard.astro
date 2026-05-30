@@ -1,0 +1,691 @@
+---
+const consumers = [
+  { id: 'chatgpt', name: 'CHATGPT', y: 116 },
+  { id: 'claude', name: 'CLAUDE', y: 198 },
+  { id: 'apple', name: 'APPLE INTEL.', y: 280 },
+  { id: 'perplexity', name: 'PERPLEXITY', y: 362 },
+];
+
+const enterprises = [
+  { id: 'rei', name: 'REI', y: 88 },
+  { id: 'patagonia', name: 'PATAGONIA', y: 160 },
+  { id: 'backcountry', name: 'BACKCOUNTRY', y: 232 },
+  { id: 'smartwool', name: 'SMARTWOOL', y: 304 },
+  { id: 'moosejaw', name: 'MOOSEJAW', y: 376 },
+  { id: 'outdoor', name: 'OUTDOOR VOICES', y: 448 },
+];
+
+const consumerDotX = 168;
+const consumerLabelX = 154;
+const enterpriseDotX = 532;
+const enterpriseLabelX = 546;
+const bridge = { x: 350, y: 270 };
+---
+
+<figure class="switchboard" aria-label="Live A2A handshake monitor between consumer agents and enterprise agents through the Chips bridge">
+  <header class="sb-head">
+    <div class="sb-head-l">
+      <span class="sb-id mono">A2A · ROUTING TABLE</span>
+      <span class="sb-id-sub mono">agents.chips.dev</span>
+    </div>
+    <div class="sb-head-r">
+      <span class="sb-tick mono" data-clock>00:00:00 UTC</span>
+      <span class="sb-live mono"><span class="sb-pulse"></span>LIVE</span>
+    </div>
+  </header>
+
+  <svg class="sb-canvas" viewBox="0 0 700 540" preserveAspectRatio="xMidYMid meet" role="presentation">
+    <defs>
+      <pattern id="sb-grid" width="28" height="28" patternUnits="userSpaceOnUse">
+        <path d="M 28 0 L 0 0 0 28" fill="none" stroke="currentColor" stroke-width="0.4" />
+      </pattern>
+      <radialGradient id="sb-bridge-grad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#3e8e5e" stop-opacity="0.35" />
+        <stop offset="60%" stop-color="#3e8e5e" stop-opacity="0.12" />
+        <stop offset="100%" stop-color="#3e8e5e" stop-opacity="0" />
+      </radialGradient>
+    </defs>
+
+    <rect class="sb-grid-bg" width="700" height="540" fill="url(#sb-grid)" />
+
+    <!-- column headers -->
+    <text class="sb-col-head" x={consumerLabelX} y="50" text-anchor="end">CONSUMER · CALLER</text>
+    <text class="sb-col-head" x={enterpriseLabelX} y="50" text-anchor="start">ENTERPRISE · CALLEE</text>
+    <text class="sb-col-head sb-bridge-head" x={bridge.x} y="50" text-anchor="middle">BRIDGE</text>
+
+    <!-- column rules -->
+    <line class="sb-col-rule" x1={consumerDotX} y1="68" x2={consumerDotX} y2="490" />
+    <line class="sb-col-rule" x1={enterpriseDotX} y1="68" x2={enterpriseDotX} y2="490" />
+
+    <!-- bridge cluster -->
+    <g class="sb-bridge" transform={`translate(${bridge.x}, ${bridge.y})`}>
+      <circle class="sb-halo" r="68" fill="url(#sb-bridge-grad)" />
+      <circle class="sb-halo-2" r="38" fill="none" stroke="#3e8e5e" stroke-opacity="0.25" />
+      <circle class="sb-halo-3" r="24" fill="none" stroke="#3e8e5e" stroke-opacity="0.45" />
+      <circle class="sb-core" r="9" fill="#3e8e5e" />
+      <text class="sb-bridge-id mono" y="-90" text-anchor="middle">·</text>
+    </g>
+
+    <!-- consumer nodes -->
+    <g class="sb-col sb-col-consumer">
+      {consumers.map((c) => (
+        <g class="sb-node" data-side="consumer" data-id={c.id} transform={`translate(0, ${c.y})`}>
+          <text class="sb-node-label mono" x={consumerLabelX} y="0" text-anchor="end">{c.name}</text>
+          <text class="sb-node-meta mono" x={consumerLabelX} y="14" text-anchor="end">v1.{(c.id.length * 13) % 10}.x</text>
+          <line class="sb-node-tick" x1={consumerLabelX + 6} x2={consumerDotX - 6} y1="-3" y2="-3" />
+          <circle class="sb-node-dot" cx={consumerDotX} cy="-3" r="4" />
+        </g>
+      ))}
+    </g>
+
+    <!-- enterprise nodes -->
+    <g class="sb-col sb-col-enterprise">
+      {enterprises.map((e) => (
+        <g class="sb-node" data-side="enterprise" data-id={e.id} transform={`translate(0, ${e.y})`}>
+          <circle class="sb-node-dot" cx={enterpriseDotX} cy="-3" r="4" />
+          <line class="sb-node-tick" x1={enterpriseDotX + 6} x2={enterpriseLabelX - 6} y1="-3" y2="-3" />
+          <text class="sb-node-label mono" x={enterpriseLabelX} y="0" text-anchor="start">{e.name}</text>
+          <text class="sb-node-meta mono" x={enterpriseLabelX} y="14" text-anchor="start">.well-known/agent</text>
+        </g>
+      ))}
+    </g>
+
+    <!-- live paths layer (populated by JS) -->
+    <g class="sb-paths"></g>
+
+    <!-- bottom rail -->
+    <line class="sb-rail" x1="0" y1="510" x2="700" y2="510" />
+    <text class="sb-rail-l mono" x="20" y="528" text-anchor="start">SCOPE · CONSENT-MEDIATED</text>
+    <text class="sb-rail-r mono" x="680" y="528" text-anchor="end">RS256 · A2A v1</text>
+  </svg>
+
+  <footer class="sb-feed">
+    <div class="sb-feed-head mono">
+      <span>TS</span>
+      <span>ROUTE</span>
+      <span>INTENT · SCOPE</span>
+      <span>LAT</span>
+    </div>
+    <ol class="sb-feed-rows" aria-live="polite"></ol>
+  </footer>
+</figure>
+
+<script>
+  type Node = { id: string; name: string; y: number };
+
+  const consumers: Node[] = [
+    { id: 'chatgpt', name: 'CHATGPT', y: 116 },
+    { id: 'claude', name: 'CLAUDE', y: 198 },
+    { id: 'apple', name: 'APPLE INTEL.', y: 280 },
+    { id: 'perplexity', name: 'PERPLEXITY', y: 362 },
+  ];
+
+  const enterprises: Node[] = [
+    { id: 'rei', name: 'REI', y: 88 },
+    { id: 'patagonia', name: 'PATAGONIA', y: 160 },
+    { id: 'backcountry', name: 'BACKCOUNTRY', y: 232 },
+    { id: 'smartwool', name: 'SMARTWOOL', y: 304 },
+    { id: 'moosejaw', name: 'MOOSEJAW', y: 376 },
+    { id: 'outdoor', name: 'OUTDOOR VOICES', y: 448 },
+  ];
+
+  const intents = [
+    'ski-layering', 'winter-jacket', 'trail-runner', 'baselayer',
+    'rain-shell', 'down-bag', 'fit-check', 'gift-recs', 'wool-socks',
+    'pack-fit', 'glove-pair', 'sleep-system',
+  ];
+
+  const scopes = [
+    'loyalty-tier', 'purchase-history', 'size-profile',
+    'behavioral-profile', 'category-recent', 'attested-claims',
+  ];
+
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const consumerDotX = 168;
+  const enterpriseDotX = 532;
+  const bridge = { x: 350, y: 270 };
+
+  function rand<T>(arr: T[]): T {
+    return arr[Math.floor(Math.random() * arr.length)] as T;
+  }
+  function jitter(base: number, spread: number) {
+    return base + (Math.random() - 0.5) * spread;
+  }
+  function pad(n: number, w = 2) {
+    return n.toString().padStart(w, '0');
+  }
+
+  function init(root: HTMLElement) {
+    const svg = root.querySelector('.sb-canvas') as SVGSVGElement | null;
+    const pathsGroup = root.querySelector('.sb-paths') as SVGGElement | null;
+    const bridgeEl = root.querySelector('.sb-bridge') as SVGGElement | null;
+    const feedRows = root.querySelector('.sb-feed-rows') as HTMLOListElement | null;
+    const clockEl = root.querySelector('[data-clock]') as HTMLElement | null;
+    if (!svg || !pathsGroup || !bridgeEl || !feedRows || !clockEl) return;
+
+    // synthetic clock — accelerated, drifting
+    let virtualNow = Date.now() - 3 * 3600 * 1000 + Math.floor(Math.random() * 6 * 3600 * 1000);
+
+    function paintClock() {
+      const d = new Date(virtualNow);
+      clockEl.textContent = `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())} UTC`;
+    }
+    paintClock();
+    setInterval(() => {
+      virtualNow += 1000;
+      paintClock();
+    }, 1000);
+
+    let counter = 0;
+
+    function flashNode(side: 'consumer' | 'enterprise', id: string, delay = 0) {
+      const node = root.querySelector<SVGGElement>(
+        `.sb-node[data-side="${side}"][data-id="${id}"]`
+      );
+      if (!node) return;
+      setTimeout(() => {
+        node.classList.add('sb-node-flash');
+        setTimeout(() => node.classList.remove('sb-node-flash'), 480);
+      }, delay);
+    }
+
+    function pulseBridge(intensity: 'normal' | 'strong' = 'normal') {
+      bridgeEl.classList.add(intensity === 'strong' ? 'sb-bridge-strong' : 'sb-bridge-active');
+      setTimeout(
+        () => bridgeEl.classList.remove('sb-bridge-active', 'sb-bridge-strong'),
+        intensity === 'strong' ? 700 : 420
+      );
+    }
+
+    function drawPath(consumer: Node, enterprise: Node, isBridge = false): SVGPathElement {
+      const sx = consumerDotX;
+      const sy = consumer.y - 3;
+      const ex = enterpriseDotX;
+      const ey = enterprise.y - 3;
+      const mx = bridge.x;
+      const my = bridge.y;
+
+      const d = `M ${sx} ${sy} C ${sx + 90} ${sy}, ${mx - 70} ${my}, ${mx} ${my} C ${mx + 70} ${my}, ${ex - 90} ${ey}, ${ex} ${ey}`;
+
+      const path = document.createElementNS(SVG_NS, 'path');
+      path.setAttribute('d', d);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', '#3e8e5e');
+      path.setAttribute('stroke-width', isBridge ? '0.9' : '1.3');
+      path.setAttribute('stroke-linecap', 'round');
+      path.setAttribute('pathLength', '100');
+      path.setAttribute('stroke-dasharray', '100 100');
+      path.setAttribute('stroke-dashoffset', '100');
+      path.setAttribute('opacity', '0');
+      path.classList.add('sb-path');
+      if (isBridge) path.classList.add('sb-path-bridge');
+
+      pathsGroup.appendChild(path);
+      requestAnimationFrame(() => path.classList.add('sb-path-active'));
+      setTimeout(() => path.remove(), 1700);
+      return path;
+    }
+
+    function addFeedRow(opts: {
+      consumer: Node;
+      enterprise: Node;
+      intent: string;
+      scope: string;
+      latency: number;
+      kind: 'handshake' | 'bridge';
+    }) {
+      virtualNow += Math.floor(jitter(900, 700));
+      const d = new Date(virtualNow);
+      const ts = `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}.${pad(d.getUTCMilliseconds(), 3)}`;
+
+      const li = document.createElement('li');
+      li.className = `sb-row sb-row-${opts.kind}`;
+
+      const tsEl = document.createElement('span');
+      tsEl.className = 'sb-ts mono';
+      tsEl.textContent = ts;
+
+      const routeEl = document.createElement('span');
+      routeEl.className = 'sb-route mono';
+      const consumerName = document.createTextNode(opts.consumer.name);
+      const arrowEl = document.createElement('span');
+      arrowEl.className = 'sb-arrow';
+      arrowEl.textContent = opts.kind === 'bridge' ? ' ⇉ ' : ' → ';
+      const enterpriseName = document.createTextNode(opts.enterprise.name);
+      routeEl.append(consumerName, arrowEl, enterpriseName);
+
+      const scopeEl = document.createElement('span');
+      scopeEl.className = 'sb-scope mono';
+      scopeEl.append(document.createTextNode(opts.intent));
+      const scopeDim = document.createElement('span');
+      scopeDim.className = 'sb-scope-dim';
+      scopeDim.textContent = ` · ${opts.scope}`;
+      scopeEl.append(scopeDim);
+
+      const latEl = document.createElement('span');
+      latEl.className = 'sb-lat mono';
+      latEl.append(document.createTextNode(String(opts.latency)));
+      const latUnit = document.createElement('span');
+      latUnit.className = 'sb-lat-unit';
+      latUnit.textContent = 'ms';
+      latEl.append(latUnit);
+
+      li.append(tsEl, routeEl, scopeEl, latEl);
+
+      feedRows.prepend(li);
+      while (feedRows.children.length > 6) {
+        const last = feedRows.lastElementChild;
+        if (!last) break;
+        last.classList.add('sb-row-out');
+        setTimeout(() => last.remove(), 400);
+      }
+      requestAnimationFrame(() => li.classList.add('sb-row-in'));
+    }
+
+    function fireHandshake() {
+      const isBridge = counter > 0 && counter % 5 === 0;
+      const consumer = rand(consumers);
+      const enterprise = rand(enterprises);
+      const intent = rand(intents);
+      const scope = rand(scopes);
+      const latency = Math.round(jitter(360, 320));
+
+      drawPath(consumer, enterprise, false);
+      flashNode('consumer', consumer.id, 0);
+      flashNode('enterprise', enterprise.id, 700);
+      setTimeout(() => pulseBridge('normal'), 380);
+
+      addFeedRow({ consumer, enterprise, intent, scope, latency, kind: 'handshake' });
+
+      if (isBridge) {
+        // Fan-out: bridge query to two more enterprises
+        const others = enterprises.filter((e) => e.id !== enterprise.id);
+        const e2 = rand(others);
+        const e3 = rand(others.filter((e) => e.id !== e2.id));
+
+        setTimeout(() => {
+          drawPath(consumer, e2, true);
+          flashNode('enterprise', e2.id, 600);
+          pulseBridge('strong');
+        }, 220);
+
+        setTimeout(() => {
+          drawPath(consumer, e3, true);
+          flashNode('enterprise', e3.id, 600);
+        }, 380);
+
+        setTimeout(() => {
+          addFeedRow({
+            consumer,
+            enterprise: e2,
+            intent,
+            scope: 'category-recent',
+            latency: Math.round(jitter(520, 280)),
+            kind: 'bridge',
+          });
+        }, 240);
+        setTimeout(() => {
+          addFeedRow({
+            consumer,
+            enterprise: e3,
+            intent,
+            scope: 'purchase-history',
+            latency: Math.round(jitter(480, 260)),
+            kind: 'bridge',
+          });
+        }, 420);
+      }
+
+      counter++;
+
+      const nextDelay = isBridge ? jitter(2600, 600) : jitter(1700, 700);
+      setTimeout(fireHandshake, nextDelay);
+    }
+
+    // start
+    setTimeout(fireHandshake, 700);
+  }
+
+  function boot() {
+    document.querySelectorAll<HTMLElement>('.switchboard').forEach(init);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+</script>
+
+<style>
+  .switchboard {
+    margin: 0;
+    border: 1px solid var(--hair);
+    background: color-mix(in oklab, var(--bg) 60%, transparent);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow:
+      0 1px 0 color-mix(in oklab, var(--ink) 4%, transparent),
+      0 32px 64px -32px color-mix(in oklab, var(--ink) 16%, transparent);
+  }
+
+  .sb-head {
+    border-bottom: 1px solid var(--hair);
+    padding: 14px 20px 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    background: color-mix(in oklab, var(--bg-soft) 80%, transparent);
+  }
+  .sb-head-l, .sb-head-r {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .sb-id {
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .sb-id-sub {
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--slate);
+    text-transform: none;
+  }
+  .sb-tick {
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    color: var(--slate);
+    font-variant-numeric: tabular-nums;
+  }
+  .sb-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    color: var(--emerald);
+  }
+  .sb-pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--emerald);
+    animation: sb-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes sb-pulse {
+    0%, 100% { opacity: 0.35; transform: scale(0.82); }
+    50%      { opacity: 1; transform: scale(1); }
+  }
+
+  .sb-canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+    color: var(--hair-2);
+  }
+
+  .sb-grid-bg {
+    opacity: 0.5;
+  }
+
+  .sb-col-head {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    fill: var(--slate);
+    font-weight: 500;
+  }
+  .sb-bridge-head {
+    fill: var(--emerald);
+  }
+  .sb-col-rule {
+    stroke: var(--hair-2);
+    stroke-width: 0.5;
+    stroke-dasharray: 1 4;
+  }
+
+  .sb-node-label {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.14em;
+    fill: var(--ink);
+    font-weight: 500;
+    transition: fill 220ms ease;
+  }
+  .sb-node-meta {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    fill: var(--slate);
+    opacity: 0.7;
+  }
+  .sb-node-tick {
+    stroke: var(--hair-2);
+    stroke-width: 0.6;
+  }
+  .sb-node-dot {
+    fill: var(--bg);
+    stroke: var(--hair-2);
+    stroke-width: 1;
+    transition: fill 200ms ease, stroke 200ms ease;
+  }
+  .sb-node-flash .sb-node-label {
+    fill: var(--emerald);
+  }
+  .sb-node-flash .sb-node-dot {
+    fill: var(--emerald);
+    stroke: var(--emerald);
+  }
+
+  /* Bridge */
+  .sb-bridge .sb-halo {
+    transform-origin: center;
+    transition: opacity 250ms ease, transform 250ms ease;
+    opacity: 0.8;
+    transform-box: fill-box;
+  }
+  .sb-bridge .sb-halo-2 {
+    transform-origin: center;
+    transform-box: fill-box;
+    transition: opacity 280ms ease, transform 280ms ease;
+    stroke-dasharray: 2 3;
+    animation: sb-spin 60s linear infinite;
+  }
+  .sb-bridge .sb-halo-3 {
+    transform-origin: center;
+    transform-box: fill-box;
+    transition: opacity 200ms ease, transform 200ms ease;
+    stroke-dasharray: 1 2;
+    animation: sb-spin-reverse 40s linear infinite;
+  }
+  .sb-bridge .sb-core {
+    transform-origin: center;
+    transform-box: fill-box;
+    transition: transform 220ms ease, fill 220ms ease;
+  }
+  .sb-bridge.sb-bridge-active .sb-halo {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  .sb-bridge.sb-bridge-active .sb-core {
+    transform: scale(1.25);
+  }
+  .sb-bridge.sb-bridge-strong .sb-halo {
+    opacity: 1;
+    transform: scale(1.32);
+  }
+  .sb-bridge.sb-bridge-strong .sb-core {
+    transform: scale(1.6);
+  }
+  .sb-bridge.sb-bridge-strong .sb-halo-3 {
+    opacity: 1;
+  }
+  @keyframes sb-spin {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes sb-spin-reverse {
+    to { transform: rotate(-360deg); }
+  }
+
+  /* Paths */
+  .sb-path {
+    pointer-events: none;
+  }
+  .sb-path-active {
+    animation: sb-path-sweep 1500ms forwards cubic-bezier(0.32, 0.1, 0.45, 1);
+  }
+  .sb-path-bridge.sb-path-active {
+    animation: sb-path-sweep-bridge 1400ms forwards cubic-bezier(0.32, 0.1, 0.45, 1);
+  }
+  @keyframes sb-path-sweep {
+    0%   { stroke-dashoffset: 100; opacity: 0; }
+    8%   { opacity: 1; }
+    55%  { stroke-dashoffset: 0; opacity: 1; }
+    75%  { opacity: 0.9; }
+    100% { stroke-dashoffset: 0; opacity: 0; }
+  }
+  @keyframes sb-path-sweep-bridge {
+    0%   { stroke-dashoffset: 100; opacity: 0; }
+    8%   { opacity: 0.7; }
+    55%  { stroke-dashoffset: 0; opacity: 0.7; }
+    75%  { opacity: 0.6; }
+    100% { stroke-dashoffset: 0; opacity: 0; }
+  }
+
+  .sb-rail {
+    stroke: var(--hair);
+    stroke-width: 1;
+  }
+  .sb-rail-l, .sb-rail-r {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    fill: var(--slate);
+  }
+
+  /* Feed */
+  .sb-feed {
+    border-top: 1px solid var(--hair);
+    background: color-mix(in oklab, var(--bg-soft) 60%, transparent);
+    padding: 0;
+  }
+  .sb-feed-head {
+    display: grid;
+    grid-template-columns: 110px 1fr 1fr 70px;
+    gap: 14px;
+    padding: 12px 20px;
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    color: var(--slate);
+    border-bottom: 1px solid var(--hair);
+    text-transform: uppercase;
+  }
+  .sb-feed-rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    min-height: 144px;
+  }
+  .sb-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 1fr 70px;
+    gap: 14px;
+    padding: 9px 20px;
+    border-bottom: 1px solid color-mix(in oklab, var(--hair) 60%, transparent);
+    align-items: baseline;
+    transform: translateY(-6px);
+    opacity: 0;
+    transition: transform 320ms ease, opacity 320ms ease;
+  }
+  .sb-row:last-child { border-bottom: none; }
+  .sb-row-in {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .sb-row-out {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  .sb-ts {
+    font-size: 10.5px;
+    color: var(--slate);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+  .sb-route {
+    font-size: 11px;
+    color: var(--ink);
+    letter-spacing: 0.08em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sb-arrow {
+    color: var(--emerald);
+    font-weight: 500;
+    margin: 0 1px;
+  }
+  .sb-scope {
+    font-size: 10.5px;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .sb-scope-dim {
+    color: var(--slate);
+  }
+  .sb-lat {
+    font-size: 10.5px;
+    color: var(--slate);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .sb-lat-unit {
+    color: var(--slate);
+    opacity: 0.6;
+    margin-left: 1px;
+    font-size: 9px;
+  }
+  .sb-row-bridge .sb-route,
+  .sb-row-bridge .sb-scope {
+    color: var(--emerald-deep, #2f7048);
+  }
+  .sb-row-bridge .sb-arrow {
+    color: var(--emerald);
+  }
+
+  @media (max-width: 720px) {
+    .sb-head { padding: 12px 14px; gap: 10px; flex-wrap: wrap; }
+    .sb-head-l, .sb-head-r { gap: 12px; }
+    .sb-id-sub { display: none; }
+    .sb-feed-head, .sb-row {
+      grid-template-columns: 78px 1fr 60px;
+      padding: 9px 14px;
+      gap: 10px;
+    }
+    .sb-feed-head .sb-feed-scope-col,
+    .sb-row .sb-scope {
+      display: none;
+    }
+    .sb-feed-head > :nth-child(3),
+    .sb-row > :nth-child(3) {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sb-pulse, .sb-halo-2, .sb-halo-3 { animation: none; }
+    .sb-path-active, .sb-path-bridge.sb-path-active {
+      animation-duration: 0.01ms;
+      animation-iteration-count: 1;
+    }
+  }
+</style>

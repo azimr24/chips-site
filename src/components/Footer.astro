@@ -1,136 +1,52 @@
 ---
-import BrandWordmark from './BrandWordmark.astro';
-
 const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
   <div class="shell footer-inner">
-    <div class="footer-row top">
-      <div class="brand">
-        <BrandWordmark size="md" href="/" />
-        <p class="tag"><em>Invisible commerce infrastructure for the agentic web.</em></p>
-      </div>
-
-      <div class="cols">
-        <section class="col">
-          <span class="mono-label">Protocol</span>
-          <ul>
-            <li><a href="/how-it-works">How it works</a></li>
-            <li><a href="/network-learning">Network learning</a></li>
-            <li><a href="/docs">Docs</a></li>
-          </ul>
-        </section>
-
-        <section class="col">
-          <span class="mono-label">Customers</span>
-          <ul>
-            <li><a href="/for-enterprises">For enterprises</a></li>
-            <li><a href="/for-platforms">For platforms</a></li>
-            <li><a href="/pricing">Pricing</a></li>
-          </ul>
-        </section>
-
-        <section class="col">
-          <span class="mono-label">Company</span>
-          <ul>
-            <li><a href="/manifesto">Manifesto</a></li>
-            <li><a href="mailto:hello@chips.dev">hello@chips.dev</a></li>
-            <li><a href="https://a2a-protocol.org/" rel="noopener" target="_blank">A2A protocol</a></li>
-          </ul>
-        </section>
-      </div>
-    </div>
-
-    <div class="footer-row bottom">
-      <span class="meta mono">© {year} CHIPS NETWORK · ALL RIGHTS RESERVED</span>
-      <span class="meta mono"><em class="serif-italic">A2A-native</em> · LINUX FOUNDATION WG MEMBER</span>
-    </div>
+    <span class="meta mono">CHIPS NETWORK · {year}</span>
+    <span class="meta mono dot-sep">A2A-NATIVE · LINUX FOUNDATION WG</span>
+    <a class="meta mono mailto" href="mailto:hello@chips.dev">hello@chips.dev</a>
   </div>
 </footer>
 
 <style>
   .footer {
-    margin-top: 64px;
     border-top: 1px solid var(--hair);
-    background: var(--bg-soft);
+    background: var(--bg);
   }
   .footer-inner {
-    padding: 64px 0 32px;
-  }
-  .footer-row.top {
-    display: grid;
-    grid-template-columns: 1fr 2.2fr;
-    gap: 64px;
-    align-items: start;
-    margin-bottom: 56px;
-  }
-  .brand .tag {
-    font-family: var(--serif);
-    font-size: 15px;
-    color: var(--slate);
-    line-height: 1.5;
-    margin: 14px 0 0;
-    max-width: 32ch;
-  }
-  .brand .tag em {
-    color: var(--emerald);
-  }
-  .cols {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-  }
-  .col .mono-label {
-    display: block;
-    margin-bottom: 16px;
-  }
-  .col ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .col li {
-    margin-bottom: 10px;
-  }
-  .col a {
-    font-family: var(--serif);
-    font-size: 15.5px;
-    color: var(--ink);
-    border-bottom: none;
-  }
-  .col a:hover {
-    color: var(--emerald);
-  }
-  .footer-row.bottom {
-    border-top: 1px solid var(--hair);
-    padding-top: 24px;
+    padding: 22px 0 24px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 14px;
   }
   .meta {
-    font-family: var(--mono);
-    font-size: 10.5px;
-    letter-spacing: 0.14em;
+    font-size: 10px;
+    letter-spacing: 0.2em;
     color: var(--slate);
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: none;
   }
-  .meta em {
+  .mailto:hover {
     color: var(--emerald);
   }
-  @media (max-width: 800px) {
-    .footer-row.top {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-    .cols {
-      gap: 32px;
-    }
+  .dot-sep {
+    flex: 1 1 auto;
+    text-align: center;
   }
-  @media (max-width: 520px) {
-    .cols {
-      grid-template-columns: 1fr 1fr;
+  @media (max-width: 640px) {
+    .footer-inner {
+      justify-content: flex-start;
+      gap: 10px;
+    }
+    .dot-sep {
+      flex: 0 1 auto;
+      text-align: left;
+      order: 3;
     }
   }
 </style>
