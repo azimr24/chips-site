@@ -6,7 +6,7 @@ const CAL = 'https://cal.com/eugene-ye';
 ---
 
 <Base
-  title="Chips — Cookies for agents."
+  title="Chips — Invisible commerce infrastructure for the agentic web."
   description="A protocol the consumer never sees. Invisible commerce infrastructure for the agentic web."
 >
   <!-- ACT I — Hero + Switchboard -->
@@ -19,11 +19,11 @@ const CAL = 'https://cal.com/eugene-ye';
         </div>
 
         <h1 class="headline">
-          Cookies<br />for <em>agents</em><span class="dot">.</span>
+          A protocol<br />the consumer<br /><em>never</em> sees<span class="dot">.</span>
         </h1>
 
         <p class="sub">
-          A protocol the consumer never sees.<br />
+          Invisible commerce infrastructure for the agentic web.<br />
           Watching it run<span class="watching-arrow" aria-hidden="true"> →</span>
         </p>
 
@@ -32,7 +32,11 @@ const CAL = 'https://cal.com/eugene-ye';
             <span>Schedule a call</span>
             <span class="btn-arrow" aria-hidden="true">→</span>
           </a>
-          <a class="btn-ghost" href="mailto:hello@chips.dev">hello@chips.dev</a>
+          <span class="mail-pair">
+            <a class="mail-link mono" href="mailto:eug0212@gmail.com">eug0212@gmail.com</a>
+            <span class="mail-sep" aria-hidden="true">·</span>
+            <a class="mail-link mono" href="mailto:azimrah14@gmail.com">azimrah14@gmail.com</a>
+          </span>
         </div>
 
         <div class="hero-trace mono" aria-hidden="true">
@@ -97,7 +101,11 @@ const CAL = 'https://cal.com/eugene-ye';
           <span>Schedule a call</span>
           <span class="btn-arrow" aria-hidden="true">→</span>
         </a>
-        <a class="closer-mail mono" href="mailto:hello@chips.dev">hello@chips.dev</a>
+        <span class="mail-pair mail-pair-light">
+          <a class="closer-mail mono" href="mailto:eug0212@gmail.com">eug0212@gmail.com</a>
+          <span class="mail-sep" aria-hidden="true">·</span>
+          <a class="closer-mail mono" href="mailto:azimrah14@gmail.com">azimrah14@gmail.com</a>
+        </span>
       </div>
 
       <div class="closer-grid" aria-hidden="true"></div>
@@ -184,9 +192,9 @@ const CAL = 'https://cal.com/eugene-ye';
   }
   .headline {
     font-family: var(--serif);
-    font-size: clamp(3.75rem, 8vw + 0.5rem, 7.5rem);
-    line-height: 0.92;
-    letter-spacing: -0.034em;
+    font-size: clamp(2.75rem, 6vw + 0.5rem, 5.75rem);
+    line-height: 0.96;
+    letter-spacing: -0.028em;
     font-weight: 400;
     color: var(--ink);
     margin: 0 0 32px;
@@ -277,6 +285,39 @@ const CAL = 'https://cal.com/eugene-ye';
     border-color: var(--bg);
   }
   .btn-light:hover .btn-arrow { transform: translateX(4px); }
+
+  /* Email pair — used in hero and closer */
+  .mail-pair {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .mail-link {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--slate);
+    text-decoration: none;
+    border-bottom: 1px solid var(--hair-2);
+    padding: 4px 0 6px;
+    transition: color 200ms ease, border-color 200ms ease;
+  }
+  .mail-link:hover {
+    color: var(--emerald);
+    border-bottom-color: var(--emerald);
+  }
+  .mail-sep {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--hair-2);
+    user-select: none;
+  }
+  /* Closer variant — dark background */
+  .mail-pair-light .mail-sep,
+  .closer .mail-sep {
+    color: color-mix(in oklab, var(--bg) 25%, transparent);
+  }
 
   .hero-trace {
     display: flex;

@@ -58,23 +58,21 @@ const ogSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
     </text>
   </g>
 
-  <!-- big serif headline · two lines -->
-  <text x="80" y="290"
+  <!-- big serif headline · three lines · paradox at the heart of 06.1 -->
+  <text x="80" y="248"
         font-family="'EB Garamond', 'Plantin MT Pro', Georgia, serif"
-        font-weight="400" font-size="180" fill="${INK}" letter-spacing="-6">
-    Cookies
+        font-weight="400" font-size="118" fill="${INK}" letter-spacing="-3">
+    A protocol
   </text>
-  <text x="80" y="440"
+  <text x="80" y="358"
         font-family="'EB Garamond', Georgia, serif"
-        font-weight="400" font-size="180" fill="${INK}" letter-spacing="-6">
-    for <tspan font-style="italic" fill="${EMERALD}">agents</tspan><tspan fill="${EMERALD}" font-style="normal">.</tspan>
+        font-weight="400" font-size="118" fill="${INK}" letter-spacing="-3">
+    the consumer
   </text>
-
-  <!-- subtitle -->
-  <text x="80" y="500"
+  <text x="80" y="468"
         font-family="'EB Garamond', Georgia, serif"
-        font-style="italic" font-size="26" fill="${SLATE}">
-    A protocol the consumer never sees.
+        font-weight="400" font-size="118" fill="${INK}" letter-spacing="-3">
+    <tspan font-style="italic" fill="${EMERALD}">never</tspan> sees<tspan fill="${EMERALD}" font-style="normal">.</tspan>
   </text>
 
   <!-- bottom strip -->

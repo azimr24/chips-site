@@ -6,7 +6,11 @@ const year = new Date().getFullYear();
   <div class="shell footer-inner">
     <span class="meta mono">CHIPS NETWORK · {year}</span>
     <span class="meta mono dot-sep">A2A-NATIVE · LINUX FOUNDATION WG</span>
-    <a class="meta mono mailto" href="mailto:hello@chips.dev">hello@chips.dev</a>
+    <span class="meta mono footer-mails">
+      <a href="mailto:eug0212@gmail.com">eug0212@gmail.com</a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <a href="mailto:azimrah14@gmail.com">azimrah14@gmail.com</a>
+    </span>
   </div>
 </footer>
 
@@ -31,8 +35,26 @@ const year = new Date().getFullYear();
     text-decoration: none;
     border-bottom: none;
   }
-  .mailto:hover {
+  .footer-mails {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    text-transform: none;
+    letter-spacing: 0.04em;
+    flex-wrap: wrap;
+  }
+  .footer-mails a {
+    color: var(--slate);
+    text-decoration: none;
+    border-bottom: none;
+    transition: color 200ms ease;
+  }
+  .footer-mails a:hover {
     color: var(--emerald);
+  }
+  .footer-sep {
+    color: var(--hair-2);
+    user-select: none;
   }
   .dot-sep {
     flex: 1 1 auto;
