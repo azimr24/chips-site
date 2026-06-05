@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base
+  title="Chips — Agent actions"
+  description="Signed deep-link actions an AI assistant can mint on behalf of a user."
+>
+  <main style="max-width: 36rem; margin: 6rem auto; padding: 0 1.25rem;">
+    <h1>Agent actions</h1>
+    <p>
+      AI assistants (ChatGPT, Claude) can fetch a URL on this site to obtain a
+      signed deep link for a specific action. The link is short-lived and HMAC-signed;
+      when the user clicks it, the site verifies the signature and runs the action
+      behind a confirm step.
+    </p>
+
+    <h2>Available actions</h2>
+    <ul>
+      <li>
+        <code>greet</code> — say hello.<br />
+        Mint endpoint: <code>GET https://connectchips.xyz/agent/greet?name=&lt;name&gt;</code>
+      </li>
+    </ul>
+
+    <h2>How to use this from a chat</h2>
+    <p>
+      Ask the assistant to fetch the mint URL with the parameters you want, then surface
+      the signed link in its reply. Example prompt:
+    </p>
+    <pre><code>Fetch https://connectchips.xyz/agent/greet?name=Azim and give me the signed link from the response.</code></pre>
+    <p>
+      The response body contains a plain-text URL of the form
+      <code>https://connectchips.xyz/act?t=&lt;token&gt;</code>. Click it to confirm and run.
+    </p>
+  </main>
+</Base>
